@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LyricsApplication</string>
+    <string name="text_search">Just type in the track title to dive into the world of lyrics today…</string>
+    <string name="text_gender">Gender: %1$s</string>
+    <string name="text_country">Country: %1$s</string>
+    <string name="text_tracks">Tracks</string>
+    <string name="text_hint_delete">Swipe right or left to delete</string>
+    <string name="text_no_lyrics">Could not find lyrics for this track</string>
+    <string name="text_no_link">Could not find link to this media</string>
+    <string name="text_no_internet">You have no internet connection</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_delete">Delete all</string>
+    <string name="hint_search">e. g. Radioactive Imagine Dragons</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_history">History</string>
+    <string name="nav_library">Library</string>
+    <string name="tag_add">Add to library</string>
+    <string name="tag_remove">Remove from library</string>
+    <string name="tab_lyrics">Lyrics</string>
+    <string name="tab_artist">Artist</string>
+    <string name="tab_album">Album</string>
+    <string name="placeholder_title">Title of the track</string>
+    <string name="placeholder_artist">Artist of the track</string>
+</resources>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:padding="@dimen/paddingLarge"
+    tools:context=".ui.details.ArtistFragment">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_artist"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="fitXY"
+            android:layout_margin="@dimen/marginDefault"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/backgrounds/scenic"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tv_artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginEnd="@dimen/marginDefault"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSizeLarger"
+            app:layout_constraintStart_toEndOf="@id/iv_artist"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_artist"
+            tools:text="@string/placeholder_title"/>
+
+        <TextView
+            android:id="@+id/tv_artist_gender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSize"
+            app:layout_constraintStart_toStartOf="@id/tv_artist"
+            app:layout_constraintEnd_toEndOf="@id/tv_artist"
+            app:layout_constraintTop_toBottomOf="@id/tv_artist"
+            tools:text="@string/placeholder_artist"/>
+
+        <TextView
+            android:id="@+id/tv_artist_country"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSize"
+            app:layout_constraintStart_toStartOf="@id/tv_artist"
+            app:layout_constraintEnd_toEndOf="@id/tv_artist"
+            app:layout_constraintTop_toBottomOf="@id/tv_artist_gender"
+            tools:text="@string/placeholder_artist"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/marginDefault"
+            app:layout_constraintTop_toBottomOf="@id/iv_artist">
+
+            <ImageView
+                android:id="@+id/iv_youtube"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:src="@drawable/ic_youtube"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/iv_instagram"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:src="@drawable/ic_instagram"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/iv_facebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:src="@drawable/ic_facebook"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/iv_twitter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:src="@drawable/ic_twitter"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/iv_web"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="20"
+                android:src="@drawable/ic_website"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
