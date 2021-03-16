@@ -3,12 +3,13 @@ package shvyn22.lyricsapplication.ui.details
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navArgs
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,37 +17,33 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import shvyn22.lyricsapplication.LyricsApplication.Companion.BASE_COVER_URL
 import shvyn22.lyricsapplication.R
-import shvyn22.lyricsapplication.databinding.ActivityDetailsBinding
+import shvyn22.lyricsapplication.databinding.FragmentDetailsBinding
 
 @AndroidEntryPoint
-class DetailsActivity : AppCompatActivity() {
+class DetailsFragment : Fragment(R.layout.fragment_details) {
 
-    private val args by navArgs<DetailsActivityArgs>()
-    private lateinit var viewModel: DetailsViewModel
+    private val args by navArgs<DetailsFragmentArgs>()
+    private val viewModel: DetailsViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val binding = ActivityDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val track = intent.getParcelableExtra(TRACK_KEY) ?: args.track
+        val binding = FragmentDetailsBinding.bind(view)
+        val track = args.track
         viewModel.init(track)
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.isLibraryItem(track.idTrack)
             viewModel.detailsEvent.collect { event ->
                 when (event) {
                     is DetailsViewModel.DetailsEvent.NavigateToDetails -> {
-                        val intent = Intent(this@DetailsActivity, DetailsActivity::class.java)
-                        intent.putExtra(TRACK_KEY, event.track)
-                        startActivity(intent)
+                        findNavController().navigate(DetailsFragmentDirections
+                                .actionDetailsFragmentSelf(event.track))
                     }
                     is DetailsViewModel.DetailsEvent.NavigateToMedia -> {
                         val url = event.url
                         if (url.isEmpty()) {
-                            Toast.makeText(this@DetailsActivity,
+                            Toast.makeText(requireContext(),
                                     getString(R.string.text_no_link), Toast.LENGTH_LONG).show()
                         } else {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -57,7 +54,7 @@ class DetailsActivity : AppCompatActivity() {
             }
         }
 
-        val pagerAdapter = PagerAdapter(supportFragmentManager, lifecycle)
+        val pagerAdapter = PagerAdapter(childFragmentManager, lifecycle)
 
         viewModel.addToHistory(track)
 
@@ -95,7 +92,7 @@ class DetailsActivity : AppCompatActivity() {
         val removeTag = getString(R.string.tag_remove)
         val removeDrawable = R.drawable.ic_library_remove
 
-        viewModel.isLibraryItem.observe(this, {
+        viewModel.isLibraryItem.observe(viewLifecycleOwner) {
             if (it) {
                 binding.btnLibrary.apply {
                     tag = removeTag
@@ -111,19 +108,6 @@ class DetailsActivity : AppCompatActivity() {
                     text = addTag
                 }
             }
-        })
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
         }
-        return true
-    }
-
-    companion object {
-        const val TRACK_KEY = "track"
     }
 }

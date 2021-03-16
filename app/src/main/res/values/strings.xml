@@ -14,6 +14,7 @@
     <string name="nav_search">Search</string>
     <string name="nav_history">History</string>
     <string name="nav_library">Library</string>
+    <string name="nav_details">Details</string>
     <string name="tag_add">Add to library</string>
     <string name="tag_remove">Remove from library</string>
     <string name="tab_lyrics">Lyrics</string>

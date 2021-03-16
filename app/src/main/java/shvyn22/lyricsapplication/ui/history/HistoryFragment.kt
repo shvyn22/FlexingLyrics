@@ -55,7 +55,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history), HistoryAdapter.OnIt
                 when (event) {
                     is HistoryViewModel.HistoryEvent.NavigateToDetails -> {
                         val action = HistoryFragmentDirections
-                                .actionHistoryFragmentToDetailsActivity(event.track)
+                                .actionHistoryFragmentToDetailsFragment(event.track)
                         findNavController().navigate(action)
                     }
                 }

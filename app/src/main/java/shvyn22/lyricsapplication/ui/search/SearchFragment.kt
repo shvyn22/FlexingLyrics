@@ -101,7 +101,7 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchAdapter.OnItemC
                 when(event) {
                     is SearchViewModel.SearchEvent.NavigateToDetails -> {
                         val action = SearchFragmentDirections
-                                .actionSearchFragmentToDetailsActivity(event.track)
+                                .actionSearchFragmentToDetailsFragment(event.track)
                         findNavController().navigate(action)
                     }
                 }

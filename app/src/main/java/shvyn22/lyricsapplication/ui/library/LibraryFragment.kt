@@ -60,7 +60,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnIt
                 when (event) {
                     is LibraryViewModel.LibraryEvent.NavigateToDetails -> {
                         val action = LibraryFragmentDirections
-                                .actionLibraryFragmentToDetailsActivity(event.track)
+                                .actionLibraryFragmentToDetailsFragment(event.track)
                         findNavController().navigate(action)
                     }
                 }

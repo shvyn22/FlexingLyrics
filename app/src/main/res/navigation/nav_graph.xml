@@ -10,8 +10,8 @@
         android:label="@string/nav_search"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_detailsActivity"
-            app:destination="@id/detailsActivity" />
+            android:id="@+id/action_searchFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -19,8 +19,8 @@
         android:label="@string/nav_history"
         tools:layout="@layout/fragment_history" >
         <action
-            android:id="@+id/action_historyFragment_to_detailsActivity"
-            app:destination="@id/detailsActivity" />
+            android:id="@+id/action_historyFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
@@ -28,16 +28,19 @@
         android:label="@string/nav_library"
         tools:layout="@layout/fragment_library" >
         <action
-            android:id="@+id/action_libraryFragment_to_detailsActivity"
-            app:destination="@id/detailsActivity" />
+            android:id="@+id/action_libraryFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
-    <activity
-        android:id="@+id/detailsActivity"
-        android:name="shvyn22.lyricsapplication.ui.details.DetailsActivity"
-        android:label="Track"
-        tools:layout="@layout/activity_details" >
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="shvyn22.lyricsapplication.ui.details.DetailsFragment"
+        android:label="@string/nav_details"
+        tools:layout="@layout/fragment_details">
         <argument
             android:name="track"
             app:argType="shvyn22.lyricsapplication.data.model.Track" />
-    </activity>
+        <action
+            android:id="@+id/action_detailsFragment_self"
+            app:destination="@id/detailsFragment" />
+    </fragment>
 </navigation>
