@@ -30,20 +30,29 @@ class HistoryFragment : Fragment(R.layout.fragment_history), HistoryAdapter.OnIt
 
         val historyAdapter = HistoryAdapter(this)
 
-        binding.rvHistory.apply {
-            adapter = historyAdapter
-            setHasFixedSize(true)
+        viewModel.getHistoryItems()
 
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                    target: RecyclerView.ViewHolder) = false
+        binding.apply {
+            rvHistory.apply {
+                adapter = historyAdapter
+                setHasFixedSize(true)
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val item = historyAdapter.currentList[viewHolder.bindingAdapterPosition]
-                    viewModel.deleteTrack(item.idTrack)
-                }
-            }).attachToRecyclerView(this)
+                ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                        target: RecyclerView.ViewHolder) = false
+
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        val item = historyAdapter.currentList[viewHolder.bindingAdapterPosition]
+                        viewModel.deleteTrack(item.idTrack)
+                    }
+                }).attachToRecyclerView(this)
+            }
+
+            viewModel.isLoading.observe(viewLifecycleOwner) {
+                if (it) progressBar.visibility = View.VISIBLE
+                else progressBar.visibility = View.GONE
+            }
         }
 
         viewModel.items.observe(viewLifecycleOwner) {

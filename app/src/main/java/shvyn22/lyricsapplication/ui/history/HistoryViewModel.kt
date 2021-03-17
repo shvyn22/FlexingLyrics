@@ -1,10 +1,9 @@
 package shvyn22.lyricsapplication.ui.history
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import shvyn22.lyricsapplication.data.AppRepository
@@ -17,19 +16,29 @@ class HistoryViewModel @ViewModelInject constructor(
     private val mapper: Mapper
 ) : ViewModel() {
 
-    private val historyFlow = repository.getHistoryItems()
-    val items = historyFlow.asLiveData()
+    private val _items = MutableLiveData<List<HistoryItem>>()
+    val items : LiveData<List<HistoryItem>> get() = _items
+
+    val isLoading = MutableLiveData<Boolean>()
 
     private val historyEventChannel = Channel<HistoryEvent>()
     val historyEvent = historyEventChannel.receiveAsFlow()
 
+    fun getHistoryItems() = viewModelScope.launch {
+        repository.getHistoryItems().collect {
+            _items.value = it
+        }
+    }
+
     fun onTrackSelected(item: HistoryItem) = viewModelScope.launch {
+        isLoading.postValue(true)
         val track = if (item.hasLyrics) {
             repository.getTrack(item.idArtist, item.idAlbum, item.idTrack)
         } else {
             mapper.fromHistoryItemToTrack(item)
         }
         track.hasLyrics = item.hasLyrics
+        isLoading.postValue(false)
         historyEventChannel.send(HistoryEvent.NavigateToDetails(track))
     }
 

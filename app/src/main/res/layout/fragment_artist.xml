@@ -9,14 +9,6 @@
     android:padding="@dimen/paddingLarge"
     tools:context=".ui.details.ArtistFragment">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -67,53 +59,65 @@
             app:layout_constraintTop_toBottomOf="@id/tv_artist_gender"
             tools:text="@string/placeholder_artist"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_youtube"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="@dimen/marginDefault"
-            app:layout_constraintTop_toBottomOf="@id/iv_artist">
+            android:src="@drawable/ic_youtube"
+            app:layout_constraintTop_toBottomOf="@id/iv_artist"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_instagram"
+            tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:id="@+id/iv_youtube"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:src="@drawable/ic_youtube"
-                tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/iv_instagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_instagram"
+            app:layout_constraintTop_toTopOf="@id/iv_youtube"
+            app:layout_constraintStart_toEndOf="@id/iv_youtube"
+            app:layout_constraintEnd_toStartOf="@id/iv_facebook"
+            tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:id="@+id/iv_instagram"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:src="@drawable/ic_instagram"
-                tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/iv_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_facebook"
+            app:layout_constraintTop_toTopOf="@id/iv_youtube"
+            app:layout_constraintStart_toEndOf="@id/iv_instagram"
+            app:layout_constraintEnd_toStartOf="@id/iv_twitter"
+            tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:id="@+id/iv_facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:src="@drawable/ic_facebook"
-                tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/iv_twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_twitter"
+            app:layout_constraintTop_toTopOf="@id/iv_youtube"
+            app:layout_constraintStart_toEndOf="@id/iv_facebook"
+            app:layout_constraintEnd_toStartOf="@id/iv_web"
+            tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:id="@+id/iv_twitter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:src="@drawable/ic_twitter"
-                tools:ignore="ContentDescription" />
-
-            <ImageView
-                android:id="@+id/iv_web"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="20"
-                android:src="@drawable/ic_website"
-                tools:ignore="ContentDescription" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_website"
+            app:layout_constraintTop_toTopOf="@id/iv_youtube"
+            app:layout_constraintStart_toEndOf="@id/iv_twitter"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="@color/colorAccent"
+        tools:visibility="visible" />
 </FrameLayout>
