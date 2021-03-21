@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
     android:padding="@dimen/paddingLarge"
     tools:context=".ui.details.LyricsFragment">
@@ -12,9 +12,8 @@
         android:id="@+id/tv_lyrics"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/textSizeSmaller"
         android:gravity="center"
-        android:text="@string/tab_lyrics"/>
-
+        android:text="@string/tab_lyrics"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/textSizeSmaller" />
 </ScrollView>

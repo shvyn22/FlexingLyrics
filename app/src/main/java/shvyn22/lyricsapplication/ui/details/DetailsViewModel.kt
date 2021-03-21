@@ -23,7 +23,8 @@ class DetailsViewModel @ViewModelInject constructor(
         this.track = track
     }
 
-    val isLibraryItem = MutableLiveData<Boolean>()
+    private val _isLibraryItem = MutableLiveData<Boolean>()
+    val isLibraryItem: LiveData<Boolean> get() = _isLibraryItem
 
     private val _artistInfo = MutableLiveData<Resource<ArtistInfo>>()
     val artistInfo : LiveData<Resource<ArtistInfo>> get() = _artistInfo
@@ -45,8 +46,8 @@ class DetailsViewModel @ViewModelInject constructor(
     }
 
     fun onToggleLibrary(track: Track) {
-        if (isLibraryItem.value!!) removeFromLibrary(track.idTrack) else addToLibrary(track)
-        isLibraryItem.value = !isLibraryItem.value!!
+        if (_isLibraryItem.value!!) removeFromLibrary(track.idTrack) else addToLibrary(track)
+        _isLibraryItem.value = !_isLibraryItem.value!!
     }
 
     private fun addToLibrary(track: Track) = viewModelScope.launch {
@@ -65,7 +66,7 @@ class DetailsViewModel @ViewModelInject constructor(
     }
 
     fun isLibraryItem(id: Int) = viewModelScope.launch {
-        isLibraryItem.value = repository.isLibraryItem(id)
+        _isLibraryItem.value = repository.isLibraryItem(id)
     }
 
     fun onMediaIconClick(url: String) = viewModelScope.launch {

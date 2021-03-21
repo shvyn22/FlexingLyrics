@@ -35,20 +35,27 @@ class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnIt
 
         val libraryAdapter = LibraryAdapter(this)
 
-        binding.rvLibrary.apply {
-            adapter = libraryAdapter
-            setHasFixedSize(true)
+        binding.apply {
+            rvLibrary.apply {
+                adapter = libraryAdapter
+                setHasFixedSize(true)
 
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                    target: RecyclerView.ViewHolder) = false
+                ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                                        target: RecyclerView.ViewHolder) = false
 
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val item = libraryAdapter.currentList[viewHolder.bindingAdapterPosition]
-                    viewModel.deleteTrack(item.idTrack)
-                }
-            }).attachToRecyclerView(this)
+                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                        val item = libraryAdapter.currentList[viewHolder.bindingAdapterPosition]
+                        viewModel.deleteTrack(item.idTrack)
+                    }
+                }).attachToRecyclerView(this)
+            }
+
+            viewModel.isLoading.observe(viewLifecycleOwner) {
+                if (it) progressBar.visibility = View.VISIBLE
+                else progressBar.visibility = View.GONE
+            }
         }
 
         viewModel.items.observe(viewLifecycleOwner) {

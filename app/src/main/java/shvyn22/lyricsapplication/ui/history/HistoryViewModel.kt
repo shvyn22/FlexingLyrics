@@ -19,7 +19,8 @@ class HistoryViewModel @ViewModelInject constructor(
     private val _items = MutableLiveData<List<HistoryItem>>()
     val items : LiveData<List<HistoryItem>> get() = _items
 
-    val isLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     private val historyEventChannel = Channel<HistoryEvent>()
     val historyEvent = historyEventChannel.receiveAsFlow()
@@ -31,14 +32,14 @@ class HistoryViewModel @ViewModelInject constructor(
     }
 
     fun onTrackSelected(item: HistoryItem) = viewModelScope.launch {
-        isLoading.postValue(true)
+        _isLoading.postValue(true)
         val track = if (item.hasLyrics) {
             repository.getTrack(item.idArtist, item.idAlbum, item.idTrack)
         } else {
             mapper.fromHistoryItemToTrack(item)
         }
         track.hasLyrics = item.hasLyrics
-        isLoading.postValue(false)
+        _isLoading.postValue(false)
         historyEventChannel.send(HistoryEvent.NavigateToDetails(track))
     }
 

@@ -19,6 +19,9 @@ class LibraryViewModel @ViewModelInject constructor(
 
     private val searchQuery = state.getLiveData("librarySearch", "")
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     val items = searchQuery.switchMap {
         repository.getLibraryItems(it).asLiveData()
     }
@@ -31,12 +34,14 @@ class LibraryViewModel @ViewModelInject constructor(
     }
 
     fun onTrackSelected(item: LibraryItem) = viewModelScope.launch {
+        _isLoading.postValue(true)
         val track = if (item.hasLyrics) {
             repository.getTrack(item.idArtist, item.idAlbum, item.idTrack)
         } else {
             mapper.fromLibraryItemToTrack(item)
         }
         track.hasLyrics = item.hasLyrics
+        _isLoading.postValue(false)
         libraryEventChannel.send(LibraryEvent.NavigateToDetails(track))
     }
 

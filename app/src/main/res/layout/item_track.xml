@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/colorAccent"
     android:layout_marginBottom="@dimen/marginDefault"
+    android:backgroundTint="@color/colorAccent"
     android:elevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,8 +21,8 @@
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -31,10 +31,10 @@
             android:layout_marginStart="@dimen/marginDefault"
             android:textColor="@color/textColor"
             android:textSize="@dimen/textSize"
-            app:layout_constraintStart_toEndOf="@id/iv_track"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_track"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/placeholder_title"/>
+            tools:text="@string/placeholder_title" />
 
         <TextView
             android:id="@+id/tv_artist"
@@ -42,9 +42,9 @@
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
             android:textSize="@dimen/textSizeSmaller"
-            app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:text="@string/placeholder_artist"/>
+            tools:text="@string/placeholder_artist" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
