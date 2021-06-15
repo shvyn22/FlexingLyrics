@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/searchFragment"
-        android:title="@string/nav_search"
-        android:icon="@drawable/ic_browse"/>
+        android:icon="@drawable/ic_browse"
+        android:title="@string/nav_search" />
 
     <item
         android:id="@+id/historyFragment"
-        android:title="@string/nav_history"
-        android:icon="@drawable/ic_history"/>
+        android:icon="@drawable/ic_history"
+        android:title="@string/nav_history" />
 
     <item
         android:id="@+id/libraryFragment"
-        android:title="@string/nav_library"
-        android:icon="@drawable/ic_library"/>
+        android:icon="@drawable/ic_library"
+        android:title="@string/nav_library" />
 </menu>

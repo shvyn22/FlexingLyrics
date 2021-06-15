@@ -24,12 +24,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
         appBarConfiguration = AppBarConfiguration(
-                setOf(R.id.searchFragment, R.id.historyFragment, R.id.libraryFragment),
-                binding.drawerMain
+            setOf(R.id.searchFragment, R.id.historyFragment, R.id.libraryFragment),
+            binding.drawerMain
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)

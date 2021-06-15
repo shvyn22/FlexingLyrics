@@ -6,52 +6,44 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.lyricsapplication.data.AppRepository
-import shvyn22.lyricsapplication.data.model.HistoryItem
-import shvyn22.lyricsapplication.data.model.Track
-import shvyn22.lyricsapplication.util.Mapper
+import shvyn22.lyricsapplication.repository.AppRepository
+import shvyn22.lyricsapplication.data.local.model.HistoryItem
+import shvyn22.lyricsapplication.util.StateEvent
+import shvyn22.lyricsapplication.util.fromHistoryItemToTrack
 
 class HistoryViewModel @ViewModelInject constructor(
-    private val repository: AppRepository,
-    private val mapper: Mapper
+    private val repository: AppRepository
 ) : ViewModel() {
 
-    private val _items = MutableLiveData<List<HistoryItem>>()
-    val items : LiveData<List<HistoryItem>> get() = _items
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
-    private val historyEventChannel = Channel<HistoryEvent>()
-    val historyEvent = historyEventChannel.receiveAsFlow()
-
-    fun getHistoryItems() = viewModelScope.launch {
+    val items = liveData {
         repository.getHistoryItems().collect {
-            _items.value = it
+            emit(it)
         }
     }
 
+    private val historyEventChannel = Channel<StateEvent>()
+    val historyEvent = historyEventChannel.receiveAsFlow()
+
     fun onTrackSelected(item: HistoryItem) = viewModelScope.launch {
-        _isLoading.postValue(true)
+        historyEventChannel.send(StateEvent.Loading)
         val track = if (item.hasLyrics) {
             repository.getTrack(item.idArtist, item.idAlbum, item.idTrack)
         } else {
-            mapper.fromHistoryItemToTrack(item)
+            fromHistoryItemToTrack(item)
         }
         track.hasLyrics = item.hasLyrics
-        _isLoading.postValue(false)
-        historyEventChannel.send(HistoryEvent.NavigateToDetails(track))
+        historyEventChannel.send(StateEvent.NavigateToDetails(track))
+    }
+
+    fun onErrorOccurred() = viewModelScope.launch {
+        historyEventChannel.send(StateEvent.Error)
     }
 
     fun deleteTrack(id: Int) = viewModelScope.launch {
-        repository.deleteHistoryItem(id)
+        repository.removeFromHistory(id)
     }
 
     fun deleteAll() = viewModelScope.launch {
         repository.deleteHistoryItems()
-    }
-
-    sealed class HistoryEvent {
-        data class NavigateToDetails(val track: Track) : HistoryEvent()
     }
 }

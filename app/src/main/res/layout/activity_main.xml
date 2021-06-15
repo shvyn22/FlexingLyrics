@@ -33,6 +33,4 @@
         app:itemIconTint="@color/textColor"
         app:itemTextColor="@color/textColor"
         app:menu="@menu/menu_main" />
-
-
 </androidx.drawerlayout.widget.DrawerLayout>

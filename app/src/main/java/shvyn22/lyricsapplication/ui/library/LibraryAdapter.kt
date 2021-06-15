@@ -6,34 +6,40 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import shvyn22.lyricsapplication.LyricsApplication.Companion.BASE_COVER_URL
-import shvyn22.lyricsapplication.R
-import shvyn22.lyricsapplication.data.model.LibraryItem
+import shvyn22.lyricsapplication.data.local.model.LibraryItem
 import shvyn22.lyricsapplication.databinding.ItemTrackBinding
+import shvyn22.lyricsapplication.util.defaultRequests
 
-class LibraryAdapter(private val listener: OnItemClickListener)
-    : ListAdapter<LibraryItem, LibraryAdapter.LibraryViewHolder>(ITEM_COMPARATOR){
+class LibraryAdapter(
+    private val onClick: (LibraryItem) -> Unit
+) : ListAdapter<LibraryItem, LibraryAdapter.LibraryViewHolder>(ITEM_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
         return LibraryViewHolder(
-                ItemTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ItemTrackBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent, false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val currentItem = getItem(position)
 
-        if (currentItem != null) holder.bind(currentItem)
+        currentItem?.let { holder.bind(currentItem) }
     }
 
-    inner class LibraryViewHolder(private val binding: ItemTrackBinding)
-        : RecyclerView.ViewHolder(binding.root){
+    inner class LibraryViewHolder(
+        private val binding: ItemTrackBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
         init {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val item = getItem(position)
-                    if (item != null) listener.onItemClick(item)
+                    item?.let { onClick(item) }
                 }
             }
         }
@@ -41,11 +47,9 @@ class LibraryAdapter(private val listener: OnItemClickListener)
         fun bind(item: LibraryItem) {
             binding.apply {
                 Glide.with(itemView)
-                        .load(BASE_COVER_URL + item.idAlbum.toString())
-                        .centerCrop()
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.ic_error)
-                        .into(ivTrack)
+                    .load(BASE_COVER_URL + item.idAlbum.toString())
+                    .defaultRequests()
+                    .into(ivTrack)
 
                 tvTitle.text = item.track
 
@@ -54,17 +58,13 @@ class LibraryAdapter(private val listener: OnItemClickListener)
         }
     }
 
-    interface OnItemClickListener {
-        fun onItemClick(item: LibraryItem)
-    }
-
     companion object {
         val ITEM_COMPARATOR = object : DiffUtil.ItemCallback<LibraryItem>() {
             override fun areItemsTheSame(oldItem: LibraryItem, newItem: LibraryItem) =
-                    oldItem.idTrack == newItem.idTrack
+                oldItem.idTrack == newItem.idTrack
 
             override fun areContentsTheSame(oldItem: LibraryItem, newItem: LibraryItem) =
-                    oldItem == newItem
+                oldItem == newItem
         }
     }
 }

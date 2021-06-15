@@ -12,20 +12,19 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import shvyn22.lyricsapplication.R
-import shvyn22.lyricsapplication.data.model.Track
 import shvyn22.lyricsapplication.databinding.FragmentSearchBinding
 import shvyn22.lyricsapplication.util.Resource
-import java.lang.Exception
+import shvyn22.lyricsapplication.util.StateEvent
+import shvyn22.lyricsapplication.util.collectOnLifecycle
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search), SearchAdapter.OnItemClickListener {
+class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private val viewModel: SearchViewModel by viewModels()
 
@@ -34,13 +33,21 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchAdapter.OnItemC
 
         val binding = FragmentSearchBinding.bind(view)
 
-        val searchAdapter = SearchAdapter(this)
+        val searchAdapter = SearchAdapter {
+            try {
+                viewModel.onTrackSelected(it)
+            } catch (e: Exception) {
+                viewModel.onErrorOccurred()
+            }
+        }
 
         val text = getString(R.string.text_search)
         val spannableString = SpannableString(text)
         spannableString.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.colorAccent)),
-                55, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            ForegroundColorSpan(
+                ContextCompat.getColor(requireContext(), R.color.colorAccent)
+            ), 55, 61, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
         binding.apply {
             tvSearch.text = spannableString
@@ -49,13 +56,8 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchAdapter.OnItemC
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun onTextChanged(query: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (query.isNullOrEmpty()) {
-                        tvSearch.visibility = View.VISIBLE
-                        rvSearch.visibility = View.GONE
-                    } else {
-                        tvSearch.visibility = View.GONE
-                        rvSearch.visibility = View.VISIBLE
-                    }
+                    tvSearch.isVisible = query.isNullOrEmpty()
+                    rvSearch.isVisible = !query.isNullOrEmpty()
                 }
 
                 override fun afterTextChanged(query: Editable?) {}
@@ -73,54 +75,37 @@ class SearchFragment : Fragment(R.layout.fragment_search), SearchAdapter.OnItemC
             }
 
             rvSearch.adapter = searchAdapter
-            rvSearch.setHasFixedSize(true)
 
             viewModel.tracks.observe(viewLifecycleOwner) {
-                when (it) {
-                    is Resource.Success -> {
-                        progressBar.visibility = View.GONE
-                        searchAdapter.submitList(it.data)
-                    }
-                    is Resource.Loading -> progressBar.visibility = View.VISIBLE
-                    is Resource.Error -> {
-                        progressBar.visibility = View.GONE
-                        Toast.makeText(requireContext(), it.msg, Toast.LENGTH_LONG).show()
-                    }
-                }
+                progressBar.isVisible = it is Resource.Loading
 
-            }
-
-            viewModel.isLoading.observe(viewLifecycleOwner) {
-                if (it) progressBar.visibility = View.VISIBLE
-                else progressBar.visibility = View.GONE
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.searchEvent.collect { event ->
-                when(event) {
-                    is SearchViewModel.SearchEvent.NavigateToDetails -> {
-                        val action = SearchFragmentDirections
-                                .actionSearchFragmentToDetailsFragment(event.track)
-                        findNavController().navigate(action)
-                    }
+                if (it is Resource.Success) searchAdapter.submitList(it.data)
+                else if (it is Resource.Error) {
+                    Toast.makeText(requireContext(), it.msg, Toast.LENGTH_LONG).show()
                 }
             }
-        }
-    }
 
-    override fun onItemClick(item: Track) {
-        try {
-            viewModel.onTrackSelected(item)
-        } catch (e: Exception) {
-            Toast.makeText(requireActivity(),
-                    getString(R.string.text_no_internet), Toast.LENGTH_LONG).show()
+            viewModel.searchEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+                progressBar.isVisible = event is StateEvent.Loading
+
+                if (event is StateEvent.NavigateToDetails) {
+                    val action = SearchFragmentDirections
+                        .actionSearchFragmentToDetailsFragment(event.track)
+                    findNavController().navigate(action)
+                } else if (event is StateEvent.Error) {
+                    Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.text_no_internet),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 
     private fun hideKeyboard() {
         val inputManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE)
-                as InputMethodManager
+            as InputMethodManager
         inputManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }

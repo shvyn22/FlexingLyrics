@@ -6,27 +6,23 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.lyricsapplication.data.AppRepository
-import shvyn22.lyricsapplication.data.model.LibraryItem
-import shvyn22.lyricsapplication.data.model.Track
-import shvyn22.lyricsapplication.util.Mapper
+import shvyn22.lyricsapplication.repository.AppRepository
+import shvyn22.lyricsapplication.data.local.model.LibraryItem
+import shvyn22.lyricsapplication.util.StateEvent
+import shvyn22.lyricsapplication.util.fromLibraryItemToTrack
 
 class LibraryViewModel @ViewModelInject constructor(
     private val repository: AppRepository,
-    private val mapper: Mapper,
     @Assisted val state: SavedStateHandle
 ) : ViewModel() {
 
     private val searchQuery = state.getLiveData("librarySearch", "")
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
-
     val items = searchQuery.switchMap {
         repository.getLibraryItems(it).asLiveData()
     }
 
-    private val libraryEventChannel = Channel<LibraryEvent>()
+    private val libraryEventChannel = Channel<StateEvent>()
     val libraryEvent = libraryEventChannel.receiveAsFlow()
 
     fun searchTracks(query: String) {
@@ -34,15 +30,18 @@ class LibraryViewModel @ViewModelInject constructor(
     }
 
     fun onTrackSelected(item: LibraryItem) = viewModelScope.launch {
-        _isLoading.postValue(true)
+        libraryEventChannel.send(StateEvent.Loading)
         val track = if (item.hasLyrics) {
             repository.getTrack(item.idArtist, item.idAlbum, item.idTrack)
         } else {
-            mapper.fromLibraryItemToTrack(item)
+            fromLibraryItemToTrack(item)
         }
         track.hasLyrics = item.hasLyrics
-        _isLoading.postValue(false)
-        libraryEventChannel.send(LibraryEvent.NavigateToDetails(track))
+        libraryEventChannel.send(StateEvent.NavigateToDetails(track))
+    }
+
+    fun onErrorOccurred() = viewModelScope.launch {
+        libraryEventChannel.send(StateEvent.Error)
     }
 
     fun deleteTrack(id: Int) = viewModelScope.launch {
@@ -51,9 +50,5 @@ class LibraryViewModel @ViewModelInject constructor(
 
     fun deleteAll() = viewModelScope.launch {
         repository.deleteLibraryItems()
-    }
-
-    sealed class LibraryEvent {
-        data class NavigateToDetails(val track: Track) : LibraryEvent()
     }
 }

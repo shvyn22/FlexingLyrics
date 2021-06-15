@@ -18,8 +18,6 @@ class LyricsFragment : Fragment(R.layout.fragment_lyrics) {
 
         val binding = FragmentLyricsBinding.bind(view)
 
-        val lyrics = viewModel.track?.lyrics
-
-        binding.tvLyrics.text = lyrics ?: getString(R.string.text_no_lyrics)
+        binding.tvLyrics.text = viewModel.track?.lyrics ?: getString(R.string.text_no_lyrics)
     }
 }

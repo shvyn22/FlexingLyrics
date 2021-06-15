@@ -1,17 +1,17 @@
-package shvyn22.lyricsapplication.data.dao
+package shvyn22.lyricsapplication.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import shvyn22.lyricsapplication.data.model.HistoryItem
+import shvyn22.lyricsapplication.data.local.model.HistoryItem
 
 @Dao
 interface HistoryDao {
 
     @Query("SELECT * FROM History ORDER BY id DESC")
-    fun getAll() : Flow<List<HistoryItem>>
+    fun getAll(): Flow<List<HistoryItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(historyItem: HistoryItem)

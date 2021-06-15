@@ -7,25 +7,24 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import shvyn22.lyricsapplication.R
-import shvyn22.lyricsapplication.data.model.LibraryItem
 import shvyn22.lyricsapplication.databinding.FragmentLibraryBinding
-import java.lang.Exception
+import shvyn22.lyricsapplication.util.StateEvent
+import shvyn22.lyricsapplication.util.collectOnLifecycle
 
 @AndroidEntryPoint
-class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnItemClickListener {
+class LibraryFragment : Fragment(R.layout.fragment_library) {
 
-    private val viewModel : LibraryViewModel by viewModels()
+    private val viewModel: LibraryViewModel by viewModels()
 
-    private var _binding : FragmentLibraryBinding? = null
+    private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,17 +32,27 @@ class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnIt
 
         _binding = FragmentLibraryBinding.bind(view)
 
-        val libraryAdapter = LibraryAdapter(this)
+        val libraryAdapter = LibraryAdapter {
+            try {
+                viewModel.onTrackSelected(it)
+            } catch (e: Exception) {
+                viewModel.onErrorOccurred()
+            }
+        }
 
         binding.apply {
             rvLibrary.apply {
                 adapter = libraryAdapter
                 setHasFixedSize(true)
 
-                ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                        target: RecyclerView.ViewHolder) = false
+                ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                    0,
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                ) {
+                    override fun onMove(
+                        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder
+                    ) = false
 
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                         val item = libraryAdapter.currentList[viewHolder.bindingAdapterPosition]
@@ -52,9 +61,20 @@ class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnIt
                 }).attachToRecyclerView(this)
             }
 
-            viewModel.isLoading.observe(viewLifecycleOwner) {
-                if (it) progressBar.visibility = View.VISIBLE
-                else progressBar.visibility = View.GONE
+            viewModel.libraryEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+                progressBar.isVisible = event is StateEvent.Loading
+
+                if (event is StateEvent.NavigateToDetails) {
+                    val action = LibraryFragmentDirections
+                        .actionLibraryFragmentToDetailsFragment(event.track)
+                    findNavController().navigate(action)
+                } else if (event is StateEvent.Error) {
+                    Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.text_no_internet),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
 
@@ -62,28 +82,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnIt
             libraryAdapter.submitList(it)
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.libraryEvent.collect { event ->
-                when (event) {
-                    is LibraryViewModel.LibraryEvent.NavigateToDetails -> {
-                        val action = LibraryFragmentDirections
-                                .actionLibraryFragmentToDetailsFragment(event.track)
-                        findNavController().navigate(action)
-                    }
-                }
-            }
-        }
-
         setHasOptionsMenu(true)
-    }
-
-    override fun onItemClick(item: LibraryItem) {
-        try {
-            viewModel.onTrackSelected(item)
-        } catch (e: Exception) {
-            Toast.makeText(requireActivity(),
-                    getString(R.string.text_no_internet), Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -112,9 +111,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library), LibraryAdapter.OnIt
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_delete -> viewModel.deleteAll()
-        }
+        if (item.itemId == R.id.action_delete) viewModel.deleteAll()
         return super.onOptionsItemSelected(item)
     }
 

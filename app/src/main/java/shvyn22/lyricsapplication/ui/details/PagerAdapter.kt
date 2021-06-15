@@ -5,10 +5,16 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class PagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle)
-    : FragmentStateAdapter(fragmentManager, lifecycle) {
+class PagerAdapter(
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    private var fragments = arrayListOf(LyricsFragment(), ArtistFragment(), AlbumFragment())
+    private var fragments = arrayListOf(
+        LyricsFragment(),
+        ArtistFragment(),
+        AlbumFragment()
+    )
 
     override fun getItemCount(): Int = fragments.size
 

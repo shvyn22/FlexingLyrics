@@ -6,49 +6,51 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import shvyn22.lyricsapplication.LyricsApplication.Companion.BASE_COVER_URL
-import shvyn22.lyricsapplication.R
-import shvyn22.lyricsapplication.data.model.HistoryItem
+import shvyn22.lyricsapplication.data.local.model.HistoryItem
 import shvyn22.lyricsapplication.databinding.ItemTrackBinding
+import shvyn22.lyricsapplication.util.defaultRequests
 
-class HistoryAdapter(private val listener: OnItemClickListener)
-    : ListAdapter<HistoryItem, HistoryAdapter.HistoryViewHolder>(ITEM_COMPARATOR) {
+class HistoryAdapter(
+    private val onClick: (HistoryItem) -> Unit
+) : ListAdapter<HistoryItem, HistoryAdapter.HistoryViewHolder>(ITEM_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         return HistoryViewHolder(
-                ItemTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemTrackBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         val currentItem = getItem(position)
 
-        if (currentItem != null) holder.bind(currentItem)
+        currentItem?.let { holder.bind(currentItem) }
     }
 
-    inner class HistoryViewHolder(private val binding: ItemTrackBinding) :
-    RecyclerView.ViewHolder(binding.root) {
+    inner class HistoryViewHolder(
+        private val binding: ItemTrackBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val item = getItem(position)
-                    if (item != null) listener.onItemClick(item)
+                    item?.let { onClick(item) }
                 }
             }
         }
 
-
         fun bind(item: HistoryItem) {
             binding.apply {
                 Glide.with(itemView)
-                        .load(BASE_COVER_URL + item.idAlbum.toString())
-                        .centerCrop()
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.ic_error)
-                        .into(ivTrack)
+                    .load(BASE_COVER_URL + item.idAlbum.toString())
+                    .defaultRequests()
+                    .into(ivTrack)
 
                 tvTitle.text = item.track
 
@@ -57,17 +59,13 @@ class HistoryAdapter(private val listener: OnItemClickListener)
         }
     }
 
-    interface OnItemClickListener {
-        fun onItemClick(item: HistoryItem)
-    }
-
     companion object {
         val ITEM_COMPARATOR = object : DiffUtil.ItemCallback<HistoryItem>() {
             override fun areItemsTheSame(oldItem: HistoryItem, newItem: HistoryItem) =
-                    oldItem.idTrack == newItem.idTrack
+                oldItem.idTrack == newItem.idTrack
 
             override fun areContentsTheSame(oldItem: HistoryItem, newItem: HistoryItem) =
-                    oldItem == newItem
+                oldItem == newItem
         }
     }
 }

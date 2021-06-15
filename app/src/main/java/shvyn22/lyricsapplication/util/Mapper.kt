@@ -1,63 +1,59 @@
 package shvyn22.lyricsapplication.util
 
-import shvyn22.lyricsapplication.data.model.AlbumInfo
-import shvyn22.lyricsapplication.data.model.HistoryItem
-import shvyn22.lyricsapplication.data.model.LibraryItem
-import shvyn22.lyricsapplication.data.model.Track
-import javax.inject.Inject
+import shvyn22.lyricsapplication.data.remote.AlbumInfo
+import shvyn22.lyricsapplication.data.local.model.HistoryItem
+import shvyn22.lyricsapplication.data.local.model.LibraryItem
+import shvyn22.lyricsapplication.data.remote.Track
 
-class Mapper @Inject constructor() {
+fun fromHistoryItemToTrack(item: HistoryItem) = Track(
+    track = item.track,
+    idTrack = item.idTrack,
+    artist = item.artist,
+    idArtist = item.idArtist,
+    album = item.album,
+    idAlbum = item.idAlbum,
+    hasLyrics = false,
+    lyrics = null
+)
 
-    fun fromHistoryItemToTrack(item: HistoryItem) = Track(
-        track = item.track,
-        idTrack = item.idTrack,
-        artist = item.artist,
-        idArtist = item.idArtist,
-        album = item.album,
-        idAlbum = item.idAlbum,
-        hasLyrics = false,
-        lyrics = null
-    )
+fun fromTrackToHistoryItem(track: Track) = HistoryItem(
+    idTrack = track.idTrack,
+    track = track.track,
+    idArtist = track.idArtist,
+    artist = track.artist,
+    idAlbum = track.idAlbum,
+    album = track.album,
+    hasLyrics = track.hasLyrics
+)
 
-    fun fromTrackToHistoryItem(track: Track) = HistoryItem(
-        idTrack = track.idTrack,
-        track = track.track,
-        idArtist = track.idArtist,
-        artist = track.artist,
-        idAlbum = track.idAlbum,
-        album = track.album,
-        hasLyrics = track.hasLyrics
-    )
+fun fromLibraryItemToTrack(item: LibraryItem) = Track(
+    track = item.track,
+    idTrack = item.idTrack,
+    artist = item.artist,
+    idArtist = item.idArtist,
+    album = item.album,
+    idAlbum = item.idAlbum,
+    hasLyrics = false,
+    lyrics = null
+)
 
-    fun fromLibraryItemToTrack(item: LibraryItem) = Track(
-        track = item.track,
-        idTrack = item.idTrack,
-        artist = item.artist,
-        idArtist = item.idArtist,
-        album = item.album,
-        idAlbum = item.idAlbum,
-        hasLyrics = false,
-        lyrics = null
-    )
+fun fromTrackToLibraryItem(track: Track) = LibraryItem(
+    idTrack = track.idTrack,
+    track = track.track,
+    idArtist = track.idArtist,
+    artist = track.artist,
+    idAlbum = track.idAlbum,
+    album = track.album,
+    hasLyrics = track.hasLyrics
+)
 
-    fun fromTrackToLibraryItem(track: Track) = LibraryItem(
-        idTrack = track.idTrack,
-        track = track.track,
-        idArtist = track.idArtist,
-        artist = track.artist,
-        idAlbum = track.idAlbum,
-        album = track.album,
-        hasLyrics = track.hasLyrics
-    )
-
-    fun fromTrackInfoToTrack(item: AlbumInfo.TrackInfo, track: Track) = Track(
-        idTrack = item.idTrack,
-        track = item.track,
-        idArtist = track.idArtist,
-        artist = track.artist,
-        album = track.album,
-        idAlbum = track.idAlbum,
-        hasLyrics = item.hasLyrics,
-        lyrics = null
-    )
-}
+fun fromTrackInfoToTrack(item: AlbumInfo.TrackInfo, track: Track) = Track(
+    idTrack = item.idTrack,
+    track = item.track,
+    idArtist = track.idArtist,
+    artist = track.artist,
+    album = track.album,
+    idAlbum = track.idAlbum,
+    hasLyrics = item.hasLyrics,
+    lyrics = null
+)

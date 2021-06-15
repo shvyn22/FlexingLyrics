@@ -1,90 +1,82 @@
 package shvyn22.lyricsapplication.ui.details
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.lyricsapplication.data.AppRepository
-import shvyn22.lyricsapplication.data.model.*
-import shvyn22.lyricsapplication.util.Mapper
-import shvyn22.lyricsapplication.util.Resource
+import shvyn22.lyricsapplication.data.remote.AlbumInfo
+import shvyn22.lyricsapplication.data.remote.Track
+import shvyn22.lyricsapplication.repository.AppRepository
+import shvyn22.lyricsapplication.util.StateEvent
+import shvyn22.lyricsapplication.util.fromTrackInfoToTrack
+import shvyn22.lyricsapplication.util.fromTrackToLibraryItem
 
 class DetailsViewModel @ViewModelInject constructor(
-    private val repository: AppRepository,
-    private val mapper: Mapper
-): ViewModel() {
+    private val repository: AppRepository
+) : ViewModel() {
 
     var track: Track? = null
     fun init(track: Track) {
         this.track = track
     }
 
-    private val _isLibraryItem = MutableLiveData<Boolean>()
-    val isLibraryItem: LiveData<Boolean> get() = _isLibraryItem
-
-    private val _artistInfo = MutableLiveData<Resource<ArtistInfo>>()
-    val artistInfo : LiveData<Resource<ArtistInfo>> get() = _artistInfo
-
-    private val _albumInfo = MutableLiveData<Resource<AlbumInfo>>()
-    val albumInfo : LiveData<Resource<AlbumInfo>> get() = _albumInfo
-
-    private val detailsEventChannel = Channel<DetailsEvent>()
+    private val detailsEventChannel = Channel<StateEvent>()
     val detailsEvent = detailsEventChannel.receiveAsFlow()
 
-    fun getArtistInfo(artist: Int) = viewModelScope.launch {
-        _artistInfo.postValue(Resource.Loading())
-        _artistInfo.value = repository.getArtistInfo(artist)
+    val artistInfo = liveData {
+        repository.getArtistInfo(track?.idArtist).collect {
+            emit(it)
+        }
     }
 
-    fun getAlbumInfo(artist: Int, album: Int) = viewModelScope.launch {
-        _albumInfo.postValue(Resource.Loading())
-        _albumInfo.value = repository.getAlbumInfo(artist, album)
+    val albumInfo = liveData {
+        repository.getAlbumInfo(track?.idArtist, track?.idAlbum).collect {
+            emit(it)
+        }
     }
 
-    fun onToggleLibrary(track: Track) {
-        if (_isLibraryItem.value!!) removeFromLibrary(track.idTrack) else addToLibrary(track)
-        _isLibraryItem.value = !_isLibraryItem.value!!
+    fun isLibraryItem(id: Int) = liveData {
+        repository.isLibraryItem(id).collect {
+            emit(it)
+        }
     }
 
-    private fun addToLibrary(track: Track) = viewModelScope.launch {
-        val newItem = mapper.fromTrackToLibraryItem(track)
+    fun addToLibrary(track: Track) = viewModelScope.launch {
+        val newItem = fromTrackToLibraryItem(track)
         repository.addToLibrary(newItem)
     }
 
-    private fun removeFromLibrary(id: Int) = viewModelScope.launch {
+    fun removeFromLibrary(id: Int) = viewModelScope.launch {
         repository.deleteLibraryItem(id)
     }
 
     fun addToHistory(track: Track) = viewModelScope.launch {
-        val newItem = mapper.fromTrackToHistoryItem(track)
-        repository.deleteHistoryItem(newItem.idTrack)
-        repository.addToHistory(newItem)
-    }
-
-    fun isLibraryItem(id: Int) = viewModelScope.launch {
-        _isLibraryItem.value = repository.isLibraryItem(id)
+        repository.addToHistory(track)
     }
 
     fun onMediaIconClick(url: String) = viewModelScope.launch {
-        detailsEventChannel.send(DetailsEvent.NavigateToMedia(url))
+        detailsEventChannel.send(StateEvent.NavigateToMedia(url))
     }
 
     fun onItemClick(item: AlbumInfo.TrackInfo) = viewModelScope.launch {
-        val transitionTrack = if (item.hasLyrics) {
-            repository.getTrack(track?.idArtist!!, track?.idAlbum!!, item.idTrack)
-        } else {
-            mapper.fromTrackInfoToTrack(item, track!!)
+        if (track == null) detailsEventChannel.send(StateEvent.Error)
+        track?.let { track ->
+            val transitionTrack = if (item.hasLyrics) {
+                repository.getTrack(track.idArtist, track.idAlbum, item.idTrack)
+            } else {
+                fromTrackInfoToTrack(item, track)
+            }
+            transitionTrack.hasLyrics = item.hasLyrics
+            detailsEventChannel.send(StateEvent.NavigateToDetails(transitionTrack))
         }
-        transitionTrack.hasLyrics = item.hasLyrics
-        detailsEventChannel.send(DetailsEvent.NavigateToDetails(transitionTrack))
     }
 
-    sealed class DetailsEvent {
-        data class NavigateToDetails(val track: Track) : DetailsEvent()
-        data class NavigateToMedia(val url: String) : DetailsEvent()
+    fun onErrorOccurred() = viewModelScope.launch {
+        detailsEventChannel.send(StateEvent.Error)
     }
+
 }

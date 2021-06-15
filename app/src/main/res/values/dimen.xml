@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Padding -->
     <dimen name="paddingDefault">5dp</dimen>
     <dimen name="paddingLarge">10dp</dimen>
+
+    <!-- Margin -->
     <dimen name="marginDefault">10dp</dimen>
     <dimen name="marginSmall">5dp</dimen>
     <dimen name="marginTextSearch">40dp</dimen>
+
+    <!-- Text Size -->
     <dimen name="textSizeLargest">30sp</dimen>
     <dimen name="textSizeLarger">25sp</dimen>
     <dimen name="textSize">20sp</dimen>
