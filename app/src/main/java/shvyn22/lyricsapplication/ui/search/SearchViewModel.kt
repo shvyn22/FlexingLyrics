@@ -1,22 +1,22 @@
 package shvyn22.lyricsapplication.ui.search
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.lyricsapplication.repository.AppRepository
 import shvyn22.lyricsapplication.data.remote.Track
+import shvyn22.lyricsapplication.repository.Repository
 import shvyn22.lyricsapplication.util.StateEvent
+import javax.inject.Inject
 
-class SearchViewModel @ViewModelInject constructor(
-    private val repository: AppRepository,
-    @Assisted val state: SavedStateHandle
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val repository: Repository
 ) : ViewModel() {
 
-    private val searchQuery = state.getLiveData<String?>("searchQuery", null)
+    private val searchQuery = MutableLiveData<String?>()
 
     val tracks = searchQuery.switchMap { query ->
         liveData {

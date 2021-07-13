@@ -4,40 +4,27 @@ import android.app.Application
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import shvyn22.lyricsapplication.api.ApiInterface
+import dagger.hilt.testing.TestInstallIn
 import shvyn22.lyricsapplication.data.local.AppDatabase
 import shvyn22.lyricsapplication.data.local.dao.HistoryDao
 import shvyn22.lyricsapplication.data.local.dao.LibraryDao
+import shvyn22.lyricsapplication.repository.FakeRepositoryImpl
 import shvyn22.lyricsapplication.repository.Repository
-import shvyn22.lyricsapplication.repository.RepositoryImpl
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
+@TestInstallIn(
+    components = [SingletonComponent::class],
+    replaces = [AppModule::class]
+)
+object TestAppModule {
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl(ApiInterface.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    @Singleton
-    @Provides
-    fun provideApiInterface(retrofit: Retrofit): ApiInterface =
-        retrofit.create(ApiInterface::class.java)
-
-    @Singleton
     @Provides
     fun provideDatabase(app: Application): AppDatabase =
         Room
-            .databaseBuilder(app, AppDatabase::class.java, "app_database")
-            .fallbackToDestructiveMigration()
+            .inMemoryDatabaseBuilder(app, AppDatabase::class.java)
+            .allowMainThreadQueries()
             .build()
 
     @Provides
@@ -51,8 +38,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRepository(
-        apiInterface: ApiInterface,
         historyDao: HistoryDao,
         libraryDao: LibraryDao
-    ): Repository = RepositoryImpl(apiInterface, historyDao, libraryDao)
+    ): Repository = FakeRepositoryImpl(
+        historyDao = historyDao,
+        libraryDao = libraryDao
+    )
 }

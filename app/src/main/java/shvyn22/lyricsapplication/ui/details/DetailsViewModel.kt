@@ -1,27 +1,29 @@
 package shvyn22.lyricsapplication.ui.details
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import shvyn22.lyricsapplication.data.remote.AlbumInfo
 import shvyn22.lyricsapplication.data.remote.Track
-import shvyn22.lyricsapplication.repository.AppRepository
+import shvyn22.lyricsapplication.repository.Repository
 import shvyn22.lyricsapplication.util.StateEvent
 import shvyn22.lyricsapplication.util.fromTrackInfoToTrack
-import shvyn22.lyricsapplication.util.fromTrackToLibraryItem
+import javax.inject.Inject
 
-class DetailsViewModel @ViewModelInject constructor(
-    private val repository: AppRepository
+@HiltViewModel
+class DetailsViewModel @Inject constructor(
+    private val repository: Repository
 ) : ViewModel() {
 
     var track: Track? = null
     fun init(track: Track) {
         this.track = track
+        addToHistory()
     }
 
     private val detailsEventChannel = Channel<StateEvent>()
@@ -45,17 +47,22 @@ class DetailsViewModel @ViewModelInject constructor(
         }
     }
 
-    fun addToLibrary(track: Track) = viewModelScope.launch {
-        val newItem = fromTrackToLibraryItem(track)
-        repository.addToLibrary(newItem)
+    fun addToLibrary() = viewModelScope.launch {
+        track?.let { track ->
+            repository.addToLibrary(track)
+        }
     }
 
-    fun removeFromLibrary(id: Int) = viewModelScope.launch {
-        repository.deleteLibraryItem(id)
+    fun removeFromLibrary() = viewModelScope.launch {
+        track?.let { track ->
+            repository.deleteLibraryItem(track.idTrack)
+        }
     }
 
-    fun addToHistory(track: Track) = viewModelScope.launch {
-        repository.addToHistory(track)
+    private fun addToHistory() = viewModelScope.launch {
+        track?.let { track ->
+            repository.addToHistory(track)
+        }
     }
 
     fun onMediaIconClick(url: String) = viewModelScope.launch {

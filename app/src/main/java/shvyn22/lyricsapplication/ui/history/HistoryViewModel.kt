@@ -1,18 +1,22 @@
 package shvyn22.lyricsapplication.ui.history
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import shvyn22.lyricsapplication.repository.AppRepository
 import shvyn22.lyricsapplication.data.local.model.HistoryItem
+import shvyn22.lyricsapplication.repository.Repository
 import shvyn22.lyricsapplication.util.StateEvent
 import shvyn22.lyricsapplication.util.fromHistoryItemToTrack
+import javax.inject.Inject
 
-class HistoryViewModel @ViewModelInject constructor(
-    private val repository: AppRepository
+@HiltViewModel
+class HistoryViewModel @Inject constructor(
+    private val repository: Repository
 ) : ViewModel() {
 
     val items = liveData {

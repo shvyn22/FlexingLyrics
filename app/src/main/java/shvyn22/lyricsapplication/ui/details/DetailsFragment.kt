@@ -19,7 +19,6 @@ import shvyn22.lyricsapplication.databinding.FragmentDetailsBinding
 import shvyn22.lyricsapplication.util.StateEvent
 import shvyn22.lyricsapplication.util.collectOnLifecycle
 import shvyn22.lyricsapplication.util.defaultRequests
-import java.lang.IllegalArgumentException
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details) {
@@ -36,8 +35,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         viewModel.init(track)
 
         val pagerAdapter = PagerAdapter(childFragmentManager, lifecycle)
-
-        viewModel.addToHistory(track)
 
         binding.apply {
             Glide.with(root)
@@ -65,8 +62,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             val removeTag = getString(R.string.tag_remove)
 
             btnLibrary.setOnClickListener {
-                if (it.tag == addTag) viewModel.addToLibrary(track)
-                else viewModel.removeFromLibrary(track.idTrack)
+                if (it.tag == addTag) viewModel.addToLibrary()
+                else viewModel.removeFromLibrary()
             }
 
             viewModel.isLibraryItem(track.idTrack).observe(viewLifecycleOwner) {

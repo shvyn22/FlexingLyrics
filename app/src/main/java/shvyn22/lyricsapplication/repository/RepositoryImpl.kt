@@ -11,16 +11,17 @@ import shvyn22.lyricsapplication.data.remote.ArtistInfo
 import shvyn22.lyricsapplication.data.remote.Track
 import shvyn22.lyricsapplication.util.Resource
 import shvyn22.lyricsapplication.util.fromTrackToHistoryItem
+import shvyn22.lyricsapplication.util.fromTrackToLibraryItem
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppRepository @Inject constructor(
+class RepositoryImpl @Inject constructor(
     private val api: ApiInterface,
     private val historyDao: HistoryDao,
     private val libraryDao: LibraryDao
-) {
-    suspend fun searchTracks(query: String?) = flow<Resource<List<Track>>> {
+) : Repository {
+    override suspend fun searchTracks(query: String?) = flow<Resource<List<Track>>> {
         emit(Resource.Loading())
         if (query == null) emit(Resource.Idle())
         else {
@@ -31,7 +32,7 @@ class AppRepository @Inject constructor(
         }
     }
 
-    suspend fun getArtistInfo(artistId: Int?) = flow<Resource<ArtistInfo>> {
+    override suspend fun getArtistInfo(artistId: Int?) = flow<Resource<ArtistInfo>> {
         if (artistId == null) emit(Resource.Error(ERROR_FETCHING_DATA))
         else {
             emit(Resource.Loading())
@@ -42,7 +43,7 @@ class AppRepository @Inject constructor(
         }
     }
 
-    suspend fun getAlbumInfo(artistId: Int?, albumId: Int?) = flow<Resource<AlbumInfo>> {
+    override suspend fun getAlbumInfo(artistId: Int?, albumId: Int?) = flow<Resource<AlbumInfo>> {
         if (artistId == null || albumId == null)
             emit(Resource.Error(ERROR_FETCHING_DATA))
         else {
@@ -54,29 +55,32 @@ class AppRepository @Inject constructor(
         }
     }
 
-    suspend fun getTrack(artistId: Int, albumId: Int, trackId: Int): Track {
+    override suspend fun getTrack(artistId: Int, albumId: Int, trackId: Int): Track {
         return api.getTrackInfo(artistId, albumId, trackId).result
     }
 
-    fun getHistoryItems() = historyDao.getAll()
+    override fun getHistoryItems() = historyDao.getAll()
 
-    suspend fun addToHistory(track: Track) {
+    override suspend fun addToHistory(track: Track) {
         val newItem = fromTrackToHistoryItem(track)
         removeFromHistory(newItem.idTrack)
         historyDao.insert(newItem)
     }
 
-    suspend fun removeFromHistory(id: Int) = historyDao.delete(id)
+    override suspend fun removeFromHistory(id: Int) = historyDao.delete(id)
 
-    suspend fun deleteHistoryItems() = historyDao.deleteAll()
+    override suspend fun deleteHistoryItems() = historyDao.deleteAll()
 
-    fun getLibraryItems(query: String) = libraryDao.getAll(query)
+    override fun getLibraryItems(query: String) = libraryDao.getAll(query)
 
-    fun isLibraryItem(id: Int) = libraryDao.exists(id)
+    override fun isLibraryItem(id: Int) = libraryDao.exists(id)
 
-    suspend fun addToLibrary(libraryItem: LibraryItem) = libraryDao.insert(libraryItem)
+    override suspend fun addToLibrary(track: Track) {
+        val newItem = fromTrackToLibraryItem(track)
+        libraryDao.insert(newItem)
+    }
 
-    suspend fun deleteLibraryItem(id: Int) = libraryDao.delete(id)
+    override suspend fun deleteLibraryItem(id: Int) = libraryDao.delete(id)
 
-    suspend fun deleteLibraryItems() = libraryDao.deleteAll()
+    override suspend fun deleteLibraryItems() = libraryDao.deleteAll()
 }
