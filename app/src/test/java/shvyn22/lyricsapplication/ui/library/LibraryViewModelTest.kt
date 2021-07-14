@@ -39,7 +39,7 @@ class LibraryViewModelTest {
         repository.addToLibrary(track1)
         repository.addToLibrary(track2)
 
-        viewModel.searchTracks("Radioactive")
+        viewModel.searchTracks(track1.track)
         val items = viewModel.items
 
         assertThat(
@@ -52,7 +52,7 @@ class LibraryViewModelTest {
     fun searchTrackThatExist_Returns1Track() = runBlocking {
         repository.addToLibrary(track3)
 
-        viewModel.searchTracks("Believer")
+        viewModel.searchTracks(track3.track)
         val items = viewModel.items
 
         assertThat(
@@ -63,7 +63,7 @@ class LibraryViewModelTest {
 
     @Test
     fun searchTracksThatDoNotExist_ReturnsEmptyList() = runBlocking {
-        viewModel.searchTracks("Underdog")
+        viewModel.searchTracks(trackInfo2.track)
         val items = viewModel.items
 
         assertThat(

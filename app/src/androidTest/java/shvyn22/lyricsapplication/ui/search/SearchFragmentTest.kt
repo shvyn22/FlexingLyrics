@@ -19,7 +19,9 @@ import shvyn22.lyricsapplication.MainActivity
 import shvyn22.lyricsapplication.R
 import shvyn22.lyricsapplication.util.RecyclerViewItemCountAssertion.Companion.withItemCount
 import shvyn22.lyricsapplication.util.launchFragmentInHiltContainer
+import shvyn22.lyricsapplication.util.track1
 import shvyn22.lyricsapplication.util.track3
+import shvyn22.lyricsapplication.util.trackInfo2
 
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
@@ -55,7 +57,7 @@ class SearchFragmentTest {
             .perform(click())
         onView(withId(R.id.et_search))
             .perform(
-                typeText("Radioactive"),
+                typeText(track1.track),
                 pressImeActionButton()
             )
         onView(withId(R.id.tv_search))
@@ -76,7 +78,7 @@ class SearchFragmentTest {
             .perform(click())
         onView(withId(R.id.et_search))
             .perform(
-                typeText("Believer"),
+                typeText(track3.track),
                 pressImeActionButton()
             )
         onView(withId(R.id.tv_search))
@@ -87,7 +89,7 @@ class SearchFragmentTest {
             .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
         onView(withId(R.id.rv_search))
             .check(withItemCount(1))
-        onView(withText("Imagine Dragons"))
+        onView(withText(track3.artist))
             .check(matches(isDisplayed()))
     }
 
@@ -99,7 +101,7 @@ class SearchFragmentTest {
             .perform(click())
         onView(withId(R.id.et_search))
             .perform(
-                typeText("Underdog"),
+                typeText(trackInfo2.track),
                 pressImeActionButton()
             )
         onView(withId(R.id.tv_search))
@@ -119,7 +121,7 @@ class SearchFragmentTest {
         onView(withId(R.id.et_search))
             .perform(click())
         onView(withId(R.id.et_search))
-            .perform(typeText("Underdog"))
+            .perform(typeText(trackInfo2.track))
         onView(withId(R.id.tv_search))
             .check(matches(withEffectiveVisibility(Visibility.GONE)))
 
@@ -141,7 +143,7 @@ class SearchFragmentTest {
             .perform(click())
         onView(withId(R.id.et_search))
             .perform(
-                typeText("Believer"),
+                typeText(track3.track),
                 pressImeActionButton()
             )
 

@@ -51,7 +51,7 @@ class HistoryFragmentTest {
         onView(withId(R.id.rv_history))
             .check(withItemCount(1))
 
-        onView(withText("Radioactive"))
+        onView(withText(track1.track))
             .check(matches(isDisplayed()))
     }
 
@@ -69,9 +69,9 @@ class HistoryFragmentTest {
         onView(withId(R.id.rv_history))
             .check(withItemCount(2))
 
-        onView(withText("Radioactive"))
+        onView(withText(track1.track))
             .check(matches(isDisplayed()))
-        onView(withText("Believer"))
+        onView(withText(track3.track))
             .check(matches(isDisplayed()))
     }
 
@@ -109,7 +109,7 @@ class HistoryFragmentTest {
 
         onView(withId(R.id.rv_history))
             .check(withItemCount(1))
-        onView(withText("Believer"))
+        onView(withText(track3.track))
             .check(matches(isDisplayed()))
     }
 

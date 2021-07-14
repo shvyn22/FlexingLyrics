@@ -75,7 +75,7 @@ class DetailsFragmentTest {
             }
         )
 
-        onView(withText("Artist")).perform(click())
+        onView(withText(R.string.tab_artist)).perform(click())
 
         onView(withId(R.id.tv_artist))
             .check(matches(withText(track1.artist)))
@@ -101,7 +101,7 @@ class DetailsFragmentTest {
             }
         )
 
-        onView(withText("Album")).perform(click())
+        onView(withText(R.string.tab_album)).perform(click())
 
         onView(withId(R.id.tv_album))
             .check(matches(withText(albumInfo1.album)))
@@ -128,7 +128,7 @@ class DetailsFragmentTest {
             .check(matches(withText(track1.album)))
 
         onView(withId(R.id.tv_lyrics))
-            .check(matches(withText("Could not find lyrics for this track")))
+            .check(matches(withText(R.string.text_no_lyrics)))
     }
 
     @Test
@@ -139,9 +139,9 @@ class DetailsFragmentTest {
             }
         )
 
-        onView(withText("Add to library"))
+        onView(withText(R.string.tag_add))
             .check(matches(isDisplayed()))
-        onView(withText("Add to library"))
+        onView(withText(R.string.tag_add))
             .perform(click())
 
         var isLibraryItem = runBlocking {
@@ -149,9 +149,9 @@ class DetailsFragmentTest {
         }
         assertThat(isLibraryItem, `is`(true))
 
-        onView(withText("Remove from library"))
+        onView(withText(R.string.tag_remove))
             .check(matches(isDisplayed()))
-        onView(withText("Remove from library"))
+        onView(withText(R.string.tag_remove))
             .perform(click())
 
         isLibraryItem = runBlocking {
@@ -159,7 +159,7 @@ class DetailsFragmentTest {
         }
         assertThat(isLibraryItem, `is`(false))
 
-        onView(withText("Add to library"))
+        onView(withText(R.string.tag_add))
             .check(matches(isDisplayed()))
     }
 
@@ -174,7 +174,7 @@ class DetailsFragmentTest {
             navController = navController
         )
 
-        onView(withText("Album")).perform(click())
+        onView(withText(R.string.tab_album)).perform(click())
 
         onView(withId(R.id.rv_album))
             .perform(

@@ -33,7 +33,7 @@ class SearchViewModelTest {
 
     @Test
     fun searchTracksThatExist_Returns2TracksWithTheSameName() {
-        viewModel.searchTracks("Radioactive")
+        viewModel.searchTracks(track1.track)
 
         val tracks = viewModel.tracks
 
@@ -45,7 +45,7 @@ class SearchViewModelTest {
 
     @Test
     fun searchTracksThatExist_Returns1Track() {
-        viewModel.searchTracks("Believer")
+        viewModel.searchTracks(track3.track)
 
         val tracks = viewModel.tracks
 
@@ -57,7 +57,7 @@ class SearchViewModelTest {
 
     @Test
     fun searchTracksThatDoNotExist_ReturnsError() {
-        viewModel.searchTracks("Underdog")
+        viewModel.searchTracks(trackInfo2.track)
 
         val tracks = viewModel.tracks
 

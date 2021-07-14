@@ -46,7 +46,7 @@ class LibraryFragmentTest {
             .perform(click())
         onView(withId(R.id.search_src_text))
             .perform(
-                typeText("Radioactive"),
+                typeText(track1.track),
                 pressImeActionButton()
             )
 
@@ -65,7 +65,7 @@ class LibraryFragmentTest {
             .perform(click())
         onView(withId(R.id.search_src_text))
             .perform(
-                typeText("Believer"),
+                typeText(track3.track),
                 pressImeActionButton()
             )
 
@@ -84,7 +84,7 @@ class LibraryFragmentTest {
             .perform(click())
         onView(withId(R.id.search_src_text))
             .perform(
-                typeText("Underdog"),
+                typeText(trackInfo2.track),
                 pressImeActionButton()
             )
 
@@ -103,7 +103,7 @@ class LibraryFragmentTest {
             .perform(click())
         onView(withId(R.id.search_src_text))
             .perform(
-                typeText("Believer"),
+                typeText(track3.track),
                 pressImeActionButton()
             )
 
@@ -139,10 +139,10 @@ class LibraryFragmentTest {
         onView(withId(R.id.rv_library))
             .check(withItemCount(2))
 
-        onView(withText("Radioactive"))
+        onView(withText(track2.track))
             .check(matches(isDisplayed()))
 
-        onView(withText("Believer"))
+        onView(withText(track3.track))
             .check(matches(isDisplayed()))
     }
 
