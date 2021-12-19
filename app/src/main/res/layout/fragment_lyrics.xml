@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:padding="@dimen/paddingLarge"
-    tools:context=".ui.details.LyricsFragment">
+    tools:context=".ui.details.tabs.LyricsFragment">
 
     <TextView
         android:id="@+id/tv_lyrics"

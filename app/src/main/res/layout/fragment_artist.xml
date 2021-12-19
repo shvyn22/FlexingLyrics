@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:padding="@dimen/paddingLarge"
-    tools:context=".ui.details.ArtistFragment">
+    tools:context=".ui.details.tabs.ArtistFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -6,7 +6,7 @@
     app:startDestination="@id/searchFragment">
     <fragment
         android:id="@+id/searchFragment"
-        android:name="shvyn22.lyricsapplication.ui.search.SearchFragment"
+        android:name="shvyn22.flexinglyrics.ui.search.SearchFragment"
         android:label="@string/nav_search"
         tools:layout="@layout/fragment_search">
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="shvyn22.lyricsapplication.ui.history.HistoryFragment"
+        android:name="shvyn22.flexinglyrics.ui.history.HistoryFragment"
         android:label="@string/nav_history"
         tools:layout="@layout/fragment_history">
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
-        android:name="shvyn22.lyricsapplication.ui.library.LibraryFragment"
+        android:name="shvyn22.flexinglyrics.ui.library.LibraryFragment"
         android:label="@string/nav_library"
         tools:layout="@layout/fragment_library">
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="shvyn22.lyricsapplication.ui.details.DetailsFragment"
+        android:name="shvyn22.flexinglyrics.ui.details.DetailsFragment"
         android:label="@string/nav_details"
         tools:layout="@layout/fragment_details">
         <action
@@ -41,6 +41,6 @@
             app:destination="@id/detailsFragment" />
         <argument
             android:name="track"
-            app:argType="shvyn22.lyricsapplication.data.remote.Track" />
+            app:argType="shvyn22.flexinglyrics.data.remote.Track" />
     </fragment>
 </navigation>

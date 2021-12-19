@@ -1,89 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".ui.details.DetailsFragment">
 
-    <ImageView
-        android:id="@+id/iv_details"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_margin="@dimen/marginDefault"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription"
-        tools:src="@tools:sample/backgrounds/scenic" />
-
-    <TextView
-        android:id="@+id/tv_details_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/marginDefault"
-        android:layout_marginEnd="@dimen/marginDefault"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/textSizeLarger"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_details"
-        app:layout_constraintTop_toTopOf="@id/iv_details"
-        tools:text="@string/placeholder_title" />
-
-    <TextView
-        android:id="@+id/tv_details_artist"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/textSize"
-        app:layout_constraintEnd_toEndOf="@id/tv_details_title"
-        app:layout_constraintStart_toStartOf="@id/tv_details_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_details_title"
-        tools:text="@string/placeholder_artist" />
-
-    <TextView
-        android:id="@+id/tv_details_album"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/textSize"
-        app:layout_constraintEnd_toEndOf="@id/tv_details_title"
-        app:layout_constraintStart_toStartOf="@id/tv_details_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_details_artist"
-        tools:text="@string/placeholder_artist" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_library"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/marginDefault"
-        android:backgroundTint="@color/colorAccent"
-        android:gravity="center"
-        android:textColor="@color/textColor"
-        android:textSize="@dimen/textSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_details"
-        tools:text="@string/tag_add" />
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/marginDefault"
-        android:background="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@id/vp_details"
-        app:layout_constraintTop_toBottomOf="@id/btn_library"
-        app:tabTextColor="@color/textColor" />
+        <ImageView
+            android:id="@+id/iv_details"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_margin="@dimen/marginDefault"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_details"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tl_details" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_details_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/marginDefault"
+            android:layout_marginEnd="@dimen/marginDefault"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSizeLarger"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_details"
+            app:layout_constraintTop_toTopOf="@id/iv_details"
+            tools:text="@string/placeholder_title" />
+
+        <TextView
+            android:id="@+id/tv_details_artist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSize"
+            app:layout_constraintEnd_toEndOf="@id/tv_details_title"
+            app:layout_constraintStart_toStartOf="@id/tv_details_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_details_title"
+            tools:text="@string/placeholder_artist" />
+
+        <TextView
+            android:id="@+id/tv_details_album"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSize"
+            app:layout_constraintEnd_toEndOf="@id/tv_details_title"
+            app:layout_constraintStart_toStartOf="@id/tv_details_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_details_artist"
+            tools:text="@string/placeholder_artist" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_library"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/marginDefault"
+            android:backgroundTint="@color/colorAccent"
+            android:gravity="center"
+            android:textColor="@color/textColor"
+            android:textSize="@dimen/textSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_details"
+            tools:text="@string/tag_add" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginDefault"
+            android:background="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@id/vp_details"
+            app:layout_constraintTop_toBottomOf="@id/btn_library"
+            app:tabTextColor="@color/textColor" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_details"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_details" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/colorAccent"
+        android:progressTintMode="src_atop"
+        android:visibility="gone"/>
+</FrameLayout>

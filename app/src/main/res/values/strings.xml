@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LyricsApplication</string>
+    <string name="app_name">FlexingLyrics</string>
     <string name="text_search">Just type in the track title to dive into the world of lyrics today…</string>
     <string name="text_gender">Gender: %1$s</string>
     <string name="text_country">Country: %1$s</string>

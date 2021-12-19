@@ -12,32 +12,34 @@ def credentialProperty = new Properties()
 credentialProperty.load(new FileInputStream(credentialFile))
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    compileSdkVersion 31
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "shvyn22.lyricsapplication"
+        applicationId "shvyn22.flexinglyrics"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
-        //testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "shvyn22.lyricsapplication.HiltTestRunner"
+        testInstrumentationRunner "shvyn22.flexinglyrics.HiltTestRunner"
 
         buildConfigField("String", "API_KEY", credentialProperty['API_KEY'])
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -61,21 +63,26 @@ android {
 
 dependencies {
 
+    // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "androidx.core:core-ktx:$ktxVersion"
+
+    // AppCompat
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
+
+    // UI
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
     // Testing
     testImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$testExtJunitVersion"
     testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
     testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     androidTestImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$testExtJunitVersion"
     androidTestImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
     androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
@@ -85,11 +92,10 @@ dependencies {
 
     debugImplementation "androidx.fragment:fragment-testing:$fragmentTestingVersion"
 
-
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
-    // Lifecycle + ViewModel & LiveData
+    // Lifecycle
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
@@ -116,17 +122,9 @@ dependencies {
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltVersion"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
-    // DataStore
-    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
-
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.1'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-
-    // Paging 3
-    implementation "androidx.paging:paging-runtime:$pagingVersion"
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"
