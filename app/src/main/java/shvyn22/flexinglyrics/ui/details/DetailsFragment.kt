@@ -1,5 +1,6 @@
 package shvyn22.flexinglyrics.ui.details
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,21 +13,26 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexinglyrics.FlexingLyrics.Companion.BASE_COVER_URL
 import shvyn22.flexinglyrics.FlexingLyrics.Companion.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentDetailsBinding
 import shvyn22.flexinglyrics.ui.details.adapter.PagerAdapter
-import shvyn22.flexinglyrics.util.StateEvent
-import shvyn22.flexinglyrics.util.collectOnLifecycle
-import shvyn22.flexinglyrics.util.defaultRequests
+import shvyn22.flexinglyrics.util.*
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details) {
 
     private val args by navArgs<DetailsFragmentArgs>()
-    private val viewModel: DetailsViewModel by activityViewModels()
+    private val viewModel: DetailsViewModel by activityViewModels { viewModelFactory }
+
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

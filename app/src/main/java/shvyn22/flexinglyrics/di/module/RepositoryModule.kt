@@ -1,9 +1,7 @@
-package shvyn22.flexinglyrics.di
+package shvyn22.flexinglyrics.di.module
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import shvyn22.flexinglyrics.api.ApiInterface
 import shvyn22.flexinglyrics.data.local.dao.HistoryDao
 import shvyn22.flexinglyrics.data.local.dao.LibraryDao
@@ -16,7 +14,6 @@ import shvyn22.flexinglyrics.repository.remote.RemoteRepositoryImpl
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 object RepositoryModule {
 
     @Provides

@@ -16,17 +16,22 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentSearchBinding
-import shvyn22.flexinglyrics.util.Resource
-import shvyn22.flexinglyrics.util.StateEvent
-import shvyn22.flexinglyrics.util.collectOnLifecycle
+import shvyn22.flexinglyrics.util.*
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModels { viewModelFactory }
+
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,7 +1,6 @@
 package shvyn22.flexinglyrics.ui.search
 
 import androidx.lifecycle.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,7 +11,6 @@ import shvyn22.flexinglyrics.util.Resource
 import shvyn22.flexinglyrics.util.StateEvent
 import javax.inject.Inject
 
-@HiltViewModel
 class SearchViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository
 ) : ViewModel() {

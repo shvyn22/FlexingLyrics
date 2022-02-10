@@ -36,9 +36,8 @@ buildscript {
         // Coroutines
         coroutinesVersion = "1.5.0"
 
-        // Hilt
-        hiltAndroidXVersion = "1.0.0-alpha03"
-        hiltVersion = "2.37"
+        // Dagger
+        daggerVersion = "2.40.5"
 
         // Retrofit
         retrofitVersion = "2.8.1"
@@ -57,7 +56,6 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     }
 }
 

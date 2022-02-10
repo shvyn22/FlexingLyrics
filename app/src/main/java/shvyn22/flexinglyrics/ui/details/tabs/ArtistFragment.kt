@@ -1,22 +1,32 @@
 package shvyn22.flexinglyrics.ui.details.tabs
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
-import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentArtistBinding
 import shvyn22.flexinglyrics.ui.details.DetailsViewModel
+import shvyn22.flexinglyrics.util.MultiViewModelFactory
 import shvyn22.flexinglyrics.util.Resource
 import shvyn22.flexinglyrics.util.defaultRequests
+import shvyn22.flexinglyrics.util.singletonComponent
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class ArtistFragment : Fragment(R.layout.fragment_artist) {
 
-    private val viewModel: DetailsViewModel by activityViewModels()
+    private val viewModel: DetailsViewModel by activityViewModels { viewModelFactory }
+
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

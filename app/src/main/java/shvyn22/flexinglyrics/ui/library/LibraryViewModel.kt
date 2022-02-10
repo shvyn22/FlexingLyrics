@@ -1,7 +1,6 @@
 package shvyn22.flexinglyrics.ui.library
 
 import androidx.lifecycle.*
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -14,7 +13,6 @@ import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromLibraryItemToTrack
 import javax.inject.Inject
 
-@HiltViewModel
 class LibraryViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository,
     private val libraryRepository: LibraryRepository

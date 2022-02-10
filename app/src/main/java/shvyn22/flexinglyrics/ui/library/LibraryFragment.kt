@@ -1,5 +1,6 @@
 package shvyn22.flexinglyrics.ui.library
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,19 +14,28 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentLibraryBinding
+import shvyn22.flexinglyrics.util.MultiViewModelFactory
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.collectOnLifecycle
+import shvyn22.flexinglyrics.util.singletonComponent
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class LibraryFragment : Fragment(R.layout.fragment_library) {
 
-    private val viewModel: LibraryViewModel by viewModels()
+    private val viewModel: LibraryViewModel by viewModels { viewModelFactory }
+
+    @Inject
+    lateinit var viewModelFactory: MultiViewModelFactory
 
     private var _binding: FragmentLibraryBinding? = null
     private val binding get() = _binding!!
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        context.singletonComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
