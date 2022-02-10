@@ -1,12 +1,9 @@
 package shvyn22.flexinglyrics.ui.details
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.remote.AlbumInfo
 import shvyn22.flexinglyrics.data.remote.Track
 import shvyn22.flexinglyrics.repository.local.HistoryRepository
@@ -15,6 +12,7 @@ import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromTrackInfoToTrack
+import shvyn22.flexinglyrics.util.toLiveData
 import javax.inject.Inject
 
 class DetailsViewModel @Inject constructor(
@@ -31,63 +29,66 @@ class DetailsViewModel @Inject constructor(
         addToHistory()
     }
 
-    private val detailsEventChannel = Channel<StateEvent>()
-    val detailsEvent = detailsEventChannel.receiveAsFlow()
+    private val detailsEventChannel = PublishSubject.create<StateEvent>()
+    val detailsEvent = detailsEventChannel.toLiveData()
 
-    val artistInfo = liveData {
-        remoteRepository.getArtistInfo(track.idArtist).collect {
-            emit(it)
-        }
-    }
+    val artistInfo =
+        remoteRepository
+            .getArtistInfo(track.idArtist)
+            .subscribeOn(Schedulers.io())
+            .toLiveData()
 
-    val albumInfo = liveData {
-        remoteRepository.getAlbumInfo(track.idArtist, track.idAlbum).collect {
-            emit(it)
-        }
-    }
+    val albumInfo =
+        remoteRepository
+            .getAlbumInfo(track.idArtist, track.idAlbum)
+            .subscribeOn(Schedulers.io())
+            .toLiveData()
 
-    fun isLibraryItem(id: Int) = liveData {
-        libraryRepository.isLibraryItem(id).collect {
-            emit(it)
-        }
-    }
+    fun isLibraryItem(id: Int) =
+        libraryRepository
+            .isLibraryItem(id)
+            .subscribeOn(Schedulers.io())
+            .toLiveData()
 
-    fun addToLibrary() = viewModelScope.launch {
+    fun addToLibrary() {
         libraryRepository.add(track)
     }
 
-    fun removeFromLibrary() = viewModelScope.launch {
+    fun removeFromLibrary() {
         libraryRepository.remove(track.idTrack)
     }
 
-    private fun addToHistory() = viewModelScope.launch {
+    private fun addToHistory() {
         historyRepository.add(track)
     }
 
-    fun onMediaIconClick(url: String) = viewModelScope.launch {
-        detailsEventChannel.send(StateEvent.NavigateToMedia(url))
+    fun onMediaIconClick(url: String) {
+        detailsEventChannel.onNext(StateEvent.NavigateToMedia(url))
     }
 
-    fun onItemClick(item: AlbumInfo.TrackInfo) = viewModelScope.launch {
+    fun onItemClick(item: AlbumInfo.TrackInfo) {
         if (!item.hasLyrics) {
             fromTrackInfoToTrack(item, track).also {
-                detailsEventChannel.send(StateEvent.NavigateToDetails(it))
+                detailsEventChannel.onNext(StateEvent.NavigateToDetails(it))
             }
-        }
-        else {
-            remoteRepository.getTrack(track.idArtist, track.idAlbum, item.idTrack).collect {
-                when (it) {
-                    is Resource.Success -> detailsEventChannel
-                        .send(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
-                    is Resource.Loading -> detailsEventChannel.send(StateEvent.Loading)
-                    is Resource.Error -> onErrorOccurred()
-                    else -> Unit
+        } else {
+            remoteRepository
+                .getTrack(track.idArtist, track.idAlbum, item.idTrack)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    when (it) {
+                        is Resource.Success -> detailsEventChannel
+                            .onNext(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
+                        is Resource.Loading -> detailsEventChannel.onNext(StateEvent.Loading)
+                        is Resource.Error -> onErrorOccurred()
+                        else -> Unit
+                    }
                 }
-            }
         }
     }
 
-    fun onErrorOccurred() = viewModelScope.launch {
-        detailsEventChannel.send(StateEvent.Error)
+    fun onErrorOccurred() {
+        detailsEventChannel.onNext(StateEvent.Error)
     }
 }

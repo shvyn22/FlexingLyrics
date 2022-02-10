@@ -4,9 +4,9 @@ import shvyn22.flexinglyrics.data.remote.Track
 
 interface LocalRepository {
 
-    suspend fun add(track: Track)
+    fun add(track: Track)
 
-    suspend fun remove(id: Int)
+    fun remove(id: Int)
 
-    suspend fun removeAll()
+    fun removeAll()
 }

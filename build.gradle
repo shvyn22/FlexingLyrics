@@ -36,6 +36,9 @@ buildscript {
         // Coroutines
         coroutinesVersion = "1.5.0"
 
+        // RxJava
+        rxJavaVersion = "3.0.0"
+
         // Dagger
         daggerVersion = "2.40.5"
 

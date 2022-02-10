@@ -1,18 +1,16 @@
 package shvyn22.flexinglyrics.ui.history
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.local.model.HistoryItem
 import shvyn22.flexinglyrics.repository.local.HistoryRepository
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromHistoryItemToTrack
+import shvyn22.flexinglyrics.util.toLiveData
 import javax.inject.Inject
 
 class HistoryViewModel @Inject constructor(
@@ -20,42 +18,46 @@ class HistoryViewModel @Inject constructor(
     private val historyRepository: HistoryRepository
 ) : ViewModel() {
 
-    val items = liveData {
-        historyRepository.getItems().collect {
-            emit(it)
-        }
+    val items =
+        historyRepository
+            .getItems()
+            .subscribeOn(Schedulers.io())
+            .toLiveData()
+
+    private val historyEventChannel = PublishSubject.create<StateEvent>()
+    val historyEvent = historyEventChannel.toLiveData()
+
+    private fun onErrorOccurred() {
+        historyEventChannel.onNext(StateEvent.Error)
     }
 
-    private val historyEventChannel = Channel<StateEvent>()
-    val historyEvent = historyEventChannel.receiveAsFlow()
-
-    private fun onErrorOccurred() = viewModelScope.launch {
-        historyEventChannel.send(StateEvent.Error)
-    }
-
-    fun onTrackSelected(item: HistoryItem) = viewModelScope.launch {
+    fun onTrackSelected(item: HistoryItem) {
         if (!item.hasLyrics) {
             fromHistoryItemToTrack(item).also {
-                historyEventChannel.send(StateEvent.NavigateToDetails(it))
+                historyEventChannel.onNext(StateEvent.NavigateToDetails(it))
             }
         } else {
-            remoteRepository.getTrack(item.idArtist, item.idAlbum, item.idTrack).collect {
-                when (it) {
-                    is Resource.Success -> historyEventChannel
-                        .send(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
-                    is Resource.Loading -> historyEventChannel.send(StateEvent.Loading)
-                    is Resource.Error -> onErrorOccurred()
-                    else -> Unit
+            remoteRepository
+                .getTrack(item.idArtist, item.idAlbum, item.idTrack)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    when (it) {
+                        is Resource.Success -> historyEventChannel
+                            .onNext(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
+                        is Resource.Loading -> historyEventChannel.onNext(StateEvent.Loading)
+                        is Resource.Error -> onErrorOccurred()
+                        else -> Unit
+                    }
                 }
-            }
         }
     }
 
-    fun deleteTrack(id: Int) = viewModelScope.launch {
+    fun deleteTrack(id: Int) {
         historyRepository.remove(id)
     }
 
-    fun deleteAll() = viewModelScope.launch {
+    fun deleteAll() {
         historyRepository.removeAll()
     }
 }

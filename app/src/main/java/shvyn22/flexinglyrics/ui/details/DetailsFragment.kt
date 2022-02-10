@@ -18,7 +18,10 @@ import shvyn22.flexinglyrics.FlexingLyrics.Companion.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentDetailsBinding
 import shvyn22.flexinglyrics.ui.details.adapter.PagerAdapter
-import shvyn22.flexinglyrics.util.*
+import shvyn22.flexinglyrics.util.MultiViewModelFactory
+import shvyn22.flexinglyrics.util.StateEvent
+import shvyn22.flexinglyrics.util.defaultRequests
+import shvyn22.flexinglyrics.util.singletonComponent
 import javax.inject.Inject
 
 class DetailsFragment : Fragment(R.layout.fragment_details) {
@@ -93,7 +96,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 }
             }
 
-            viewModel.detailsEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+            viewModel.detailsEvent.observe(viewLifecycleOwner) { event ->
                 progressBar.isVisible = event is StateEvent.Loading
 
                 when (event) {

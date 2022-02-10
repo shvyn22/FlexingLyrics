@@ -1,6 +1,7 @@
 package shvyn22.flexinglyrics.repository.local
 
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import shvyn22.flexinglyrics.data.local.dao.LibraryDao
 import shvyn22.flexinglyrics.data.local.model.LibraryItem
 import shvyn22.flexinglyrics.data.remote.Track
@@ -10,17 +11,30 @@ class LibraryRepositoryImpl(
     private val libraryDao: LibraryDao
 ) : LibraryRepository {
 
-    override fun getItems(query: String): Flow<List<LibraryItem>> = libraryDao.getAll(query)
+    override fun getItems(query: String): Observable<List<LibraryItem>> = libraryDao.getAll(query)
 
-    override fun isLibraryItem(id: Int): Flow<Boolean> = libraryDao.exists(id)
+    override fun isLibraryItem(id: Int): Observable<Boolean> = libraryDao.exists(id)
 
-    override suspend fun add(track: Track) {
+    override fun add(track: Track) {
         fromTrackToLibraryItem(track).also {
-            libraryDao.insert(it)
+            libraryDao
+                .insert(it)
+                .subscribeOn(Schedulers.io())
+                .subscribe()
         }
     }
 
-    override suspend fun remove(id: Int) = libraryDao.delete(id)
+    override fun remove(id: Int) {
+        libraryDao
+            .delete(id)
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
 
-    override suspend fun removeAll() = libraryDao.deleteAll()
+    override fun removeAll() {
+        libraryDao
+            .deleteAll()
+            .subscribeOn(Schedulers.io())
+            .subscribe()
+    }
 }

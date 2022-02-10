@@ -1,16 +1,18 @@
 package shvyn22.flexinglyrics.ui.library
 
-import androidx.lifecycle.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.local.model.LibraryItem
 import shvyn22.flexinglyrics.repository.local.LibraryRepository
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromLibraryItemToTrack
+import shvyn22.flexinglyrics.util.toLiveData
 import javax.inject.Inject
 
 class LibraryViewModel @Inject constructor(
@@ -21,31 +23,38 @@ class LibraryViewModel @Inject constructor(
     private val searchQuery = MutableLiveData("")
 
     val items = searchQuery.switchMap {
-        libraryRepository.getItems(it).asLiveData()
+        libraryRepository
+            .getItems(it)
+            .subscribeOn(Schedulers.io())
+            .toLiveData()
     }
 
-    private val libraryEventChannel = Channel<StateEvent>()
-    val libraryEvent = libraryEventChannel.receiveAsFlow()
+    private val libraryEventChannel = PublishSubject.create<StateEvent>()
+    val libraryEvent = libraryEventChannel.toLiveData()
 
-    private fun onErrorOccurred() = viewModelScope.launch {
-        libraryEventChannel.send(StateEvent.Error)
+    private fun onErrorOccurred() {
+        libraryEventChannel.onNext(StateEvent.Error)
     }
 
     fun searchTracks(query: String) {
         searchQuery.value = query
     }
 
-    fun onTrackSelected(item: LibraryItem) = viewModelScope.launch {
+    fun onTrackSelected(item: LibraryItem) {
         if (!item.hasLyrics) {
             fromLibraryItemToTrack(item).also {
-                libraryEventChannel.send(StateEvent.NavigateToDetails(it))
+                libraryEventChannel.onNext(StateEvent.NavigateToDetails(it))
             }
         } else {
-            remoteRepository.getTrack(item.idArtist, item.idAlbum, item.idTrack).collect {
+            remoteRepository
+                .getTrack(item.idArtist, item.idAlbum, item.idTrack)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
                 when (it) {
                     is Resource.Success -> libraryEventChannel
-                        .send(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
-                    is Resource.Loading -> libraryEventChannel.send(StateEvent.Loading)
+                        .onNext(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
+                    is Resource.Loading -> libraryEventChannel.onNext(StateEvent.Loading)
                     is Resource.Error -> onErrorOccurred()
                     else -> Unit
                 }
@@ -53,11 +62,11 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
-    fun deleteTrack(id: Int) = viewModelScope.launch {
+    fun deleteTrack(id: Int) {
         libraryRepository.remove(id)
     }
 
-    fun deleteAll() = viewModelScope.launch {
+    fun deleteAll() {
         libraryRepository.removeAll()
     }
 }

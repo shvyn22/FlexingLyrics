@@ -1,5 +1,6 @@
 package shvyn22.flexinglyrics.api
 
+import retrofit2.Call
 import retrofit2.http.*
 import shvyn22.flexinglyrics.BuildConfig
 import shvyn22.flexinglyrics.data.remote.AlbumInfo
@@ -15,31 +16,31 @@ interface ApiInterface {
     }
 
     @GET("music")
-    suspend fun searchTracks(
+    fun searchTracks(
         @Query("q") query: String,
         @Query("limit") limit: Int = LIMIT,
         @Query("type") type: String = TYPE,
         @Query("apikey") apiKey: String = KEY
-    ): ApiResponse<List<Track>>
+    ): Call<ApiResponse<List<Track>>>
 
     @GET("music/artists/{id_artist}")
-    suspend fun getArtistInfo(
+    fun getArtistInfo(
         @Path("id_artist") artistId: Int,
         @Query("apikey") apiKey: String = KEY
-    ): ApiResponse<ArtistInfo>
+    ): Call<ApiResponse<ArtistInfo>>
 
     @GET("music/artists/{id_artist}/albums/{id_album}/tracks")
-    suspend fun getAlbumInfo(
+    fun getAlbumInfo(
         @Path("id_artist") artistId: Int,
         @Path("id_album") albumId: Int,
         @Query("apikey") apiKey: String = KEY
-    ): ApiResponse<AlbumInfo>
+    ): Call<ApiResponse<AlbumInfo>>
 
     @GET("music/artists/{id_artist}/albums/{id_album}/tracks/{id_track}/lyrics")
-    suspend fun getTrackInfo(
+    fun getTrackInfo(
         @Path("id_artist") artistId: Int,
         @Path("id_album") albumId: Int,
         @Path("id_track") trackId: Int,
         @Query("apikey") apiKey: String = KEY
-    ): ApiResponse<Track>
+    ): Call<ApiResponse<Track>>
 }

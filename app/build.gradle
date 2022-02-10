@@ -21,8 +21,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "shvyn22.flexinglyrics.HiltTestRunner"
-
         buildConfigField("String", "API_KEY", credentialProperty['API_KEY'])
     }
 
@@ -47,11 +45,6 @@ android {
         viewBinding true
     }
 
-    sourceSets {
-        androidTest.java.srcDirs += 'src/sharedTest/java'
-        test.java.srcDirs += 'src/sharedTest/java'
-    }
-
     packagingOptions {
         exclude "**/attach_hotspot_windows.dll"
         exclude "META-INF/licenses/**"
@@ -73,24 +66,6 @@ dependencies {
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
-    // Testing
-    testImplementation "junit:junit:$junitVersion"
-    testImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
-    testImplementation "org.hamcrest:hamcrest-all:$hamcrestVersion"
-    testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-
-    androidTestImplementation "junit:junit:$junitVersion"
-    androidTestImplementation "androidx.test.ext:junit:$testExtJunitVersion"
-    androidTestImplementation "androidx.test:core-ktx:$androidXTestCoreVersion"
-    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
-    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-
-    debugImplementation "androidx.fragment:fragment-testing:$fragmentTestingVersion"
-
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
@@ -107,11 +82,16 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "androidx.room:room-ktx:$roomVersion"
+    //implementation "androidx.room:room-ktx:$roomVersion"
+    implementation "androidx.room:room-rxjava3:$roomVersion"
 
     // Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    //implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    //implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    // RxJava
+    implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxJavaVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -120,6 +100,7 @@ dependencies {
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"

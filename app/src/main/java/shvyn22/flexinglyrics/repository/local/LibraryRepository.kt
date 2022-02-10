@@ -1,11 +1,11 @@
 package shvyn22.flexinglyrics.repository.local
 
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.rxjava3.core.Observable
 import shvyn22.flexinglyrics.data.local.model.LibraryItem
 
 interface LibraryRepository : LocalRepository {
 
-    fun getItems(query: String): Flow<List<LibraryItem>>
+    fun getItems(query: String): Observable<List<LibraryItem>>
 
-    fun isLibraryItem(id: Int): Flow<Boolean>
+    fun isLibraryItem(id: Int): Observable<Boolean>
 }

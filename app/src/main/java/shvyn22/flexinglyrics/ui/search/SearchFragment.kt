@@ -86,7 +86,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
 
-            viewModel.searchEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+            viewModel.searchEvent.observe(viewLifecycleOwner) { event ->
                 progressBar.isVisible = event is StateEvent.Loading
 
                 if (event is StateEvent.NavigateToDetails) {

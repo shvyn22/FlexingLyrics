@@ -4,6 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.Flow
 import shvyn22.flexinglyrics.data.local.model.HistoryItem
 
@@ -11,14 +13,14 @@ import shvyn22.flexinglyrics.data.local.model.HistoryItem
 interface HistoryDao {
 
     @Query("SELECT * FROM History ORDER BY id DESC")
-    fun getAll(): Flow<List<HistoryItem>>
+    fun getAll(): Observable<List<HistoryItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(historyItem: HistoryItem)
+    fun insert(historyItem: HistoryItem): Completable
 
     @Query("DELETE FROM History WHERE idTrack = :id ")
-    suspend fun delete(id: Int)
+    fun delete(id: Int): Completable
 
     @Query("DELETE From History")
-    suspend fun deleteAll()
+    fun deleteAll(): Completable
 }

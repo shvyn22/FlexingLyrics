@@ -18,7 +18,6 @@ import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentLibraryBinding
 import shvyn22.flexinglyrics.util.MultiViewModelFactory
 import shvyn22.flexinglyrics.util.StateEvent
-import shvyn22.flexinglyrics.util.collectOnLifecycle
 import shvyn22.flexinglyrics.util.singletonComponent
 import javax.inject.Inject
 
@@ -66,7 +65,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
                 }).attachToRecyclerView(this)
             }
 
-            viewModel.libraryEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+            viewModel.libraryEvent.observe(viewLifecycleOwner) { event ->
                 progressBar.isVisible = event is StateEvent.Loading
 
                 if (event is StateEvent.NavigateToDetails) {

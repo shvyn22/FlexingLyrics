@@ -17,7 +17,6 @@ import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentHistoryBinding
 import shvyn22.flexinglyrics.util.MultiViewModelFactory
 import shvyn22.flexinglyrics.util.StateEvent
-import shvyn22.flexinglyrics.util.collectOnLifecycle
 import shvyn22.flexinglyrics.util.singletonComponent
 import javax.inject.Inject
 
@@ -62,7 +61,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                 }).attachToRecyclerView(this)
             }
 
-            viewModel.historyEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
+            viewModel.historyEvent.observe(viewLifecycleOwner) { event ->
                 progressBar.isVisible = event is StateEvent.Loading
 
                 if (event is StateEvent.NavigateToDetails) {
