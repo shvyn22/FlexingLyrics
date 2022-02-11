@@ -13,6 +13,7 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
 ## Tech stack and concepts
 * **[Kotlin](https://kotlinlang.org/)** as programming language.
 * **[Kotlin coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/)** as framework for asynchronous jobs.
+  * **[RxJava](https://github.com/ReactiveX/RxJava)** as its alternative (/Dagger2+RxJava branch).
 * Single activity support.
   * **[Fragments](https://developer.android.com/jetpack/androidx/releases/fragment)**.
   * **[Navigation components](https://developer.android.com/jetpack/androidx/releases/navigation)**.
@@ -36,6 +37,7 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
   * **Mockito** for mocking third-party classes (e.g. *NavController*).
   * Specific testing artifacts for other libraries.
 * **[Hilt](https://dagger.dev/hilt/)** for dependency injection.
+  * **[Dagger 2](https://dagger.dev/)** as its alternative (/Dagger2+RxJava branch).
 
 ## Architecture
 The application is divided into 3 layers:
