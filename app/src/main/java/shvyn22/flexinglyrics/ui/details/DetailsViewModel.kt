@@ -2,6 +2,7 @@ package shvyn22.flexinglyrics.ui.details
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.remote.AlbumInfo
@@ -30,15 +31,15 @@ class DetailsViewModel @Inject constructor(
     }
 
     private val detailsEventChannel = PublishSubject.create<StateEvent>()
-    val detailsEvent = detailsEventChannel.toLiveData()
+    val detailsEvent: Observable<StateEvent> = detailsEventChannel.flatMap { Observable.just(it) }
 
-    val artistInfo =
+    fun getArtistInfo() =
         remoteRepository
             .getArtistInfo(track.idArtist)
             .subscribeOn(Schedulers.io())
             .toLiveData()
 
-    val albumInfo =
+    fun getAlbumInfo() =
         remoteRepository
             .getAlbumInfo(track.idArtist, track.idAlbum)
             .subscribeOn(Schedulers.io())

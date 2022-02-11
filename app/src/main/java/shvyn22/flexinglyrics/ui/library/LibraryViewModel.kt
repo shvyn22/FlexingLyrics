@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.local.model.LibraryItem
@@ -30,7 +31,7 @@ class LibraryViewModel @Inject constructor(
     }
 
     private val libraryEventChannel = PublishSubject.create<StateEvent>()
-    val libraryEvent = libraryEventChannel.toLiveData()
+    val libraryEvent: Observable<StateEvent> = libraryEventChannel.flatMap { Observable.just(it) }
 
     private fun onErrorOccurred() {
         libraryEventChannel.onNext(StateEvent.Error)
@@ -51,14 +52,14 @@ class LibraryViewModel @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                when (it) {
-                    is Resource.Success -> libraryEventChannel
-                        .onNext(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
-                    is Resource.Loading -> libraryEventChannel.onNext(StateEvent.Loading)
-                    is Resource.Error -> onErrorOccurred()
-                    else -> Unit
+                    when (it) {
+                        is Resource.Success -> libraryEventChannel
+                            .onNext(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
+                        is Resource.Loading -> libraryEventChannel.onNext(StateEvent.Loading)
+                        is Resource.Error -> onErrorOccurred()
+                        else -> Unit
+                    }
                 }
-            }
         }
     }
 

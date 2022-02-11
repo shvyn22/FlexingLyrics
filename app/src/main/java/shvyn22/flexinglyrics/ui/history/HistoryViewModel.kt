@@ -2,6 +2,7 @@ package shvyn22.flexinglyrics.ui.history
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.local.model.HistoryItem
@@ -25,7 +26,7 @@ class HistoryViewModel @Inject constructor(
             .toLiveData()
 
     private val historyEventChannel = PublishSubject.create<StateEvent>()
-    val historyEvent = historyEventChannel.toLiveData()
+    val historyEvent: Observable<StateEvent> = historyEventChannel.flatMap { Observable.just(it) }
 
     private fun onErrorOccurred() {
         historyEventChannel.onNext(StateEvent.Error)

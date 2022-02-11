@@ -16,6 +16,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentSearchBinding
 import shvyn22.flexinglyrics.util.*
@@ -86,21 +87,23 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
 
-            viewModel.searchEvent.observe(viewLifecycleOwner) { event ->
-                progressBar.isVisible = event is StateEvent.Loading
+            viewModel.searchEvent
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { event ->
+                    progressBar.isVisible = event is StateEvent.Loading
 
-                if (event is StateEvent.NavigateToDetails) {
-                    val action = SearchFragmentDirections
-                        .actionSearchFragmentToDetailsFragment(event.track)
-                    findNavController().navigate(action)
-                } else if (event is StateEvent.Error) {
-                    Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.text_no_internet),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (event is StateEvent.NavigateToDetails) {
+                        val action = SearchFragmentDirections
+                            .actionSearchFragmentToDetailsFragment(event.track)
+                        findNavController().navigate(action)
+                    } else if (event is StateEvent.Error) {
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.text_no_internet),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
         }
     }
 

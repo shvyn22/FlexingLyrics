@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentHistoryBinding
 import shvyn22.flexinglyrics.util.MultiViewModelFactory
@@ -61,22 +62,24 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                 }).attachToRecyclerView(this)
             }
 
-            viewModel.historyEvent.observe(viewLifecycleOwner) { event ->
-                progressBar.isVisible = event is StateEvent.Loading
+            viewModel.historyEvent
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { event ->
+                    progressBar.isVisible = event is StateEvent.Loading
 
-                if (event is StateEvent.NavigateToDetails) {
-                    findNavController().navigate(
-                        HistoryFragmentDirections
-                            .actionHistoryFragmentToDetailsFragment(event.track)
-                    )
-                } else if (event is StateEvent.Error) {
-                    Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.text_no_internet),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (event is StateEvent.NavigateToDetails) {
+                        findNavController().navigate(
+                            HistoryFragmentDirections
+                                .actionHistoryFragmentToDetailsFragment(event.track)
+                        )
+                    } else if (event is StateEvent.Error) {
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.text_no_internet),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
         }
 
         viewModel.items.observe(viewLifecycleOwner) {

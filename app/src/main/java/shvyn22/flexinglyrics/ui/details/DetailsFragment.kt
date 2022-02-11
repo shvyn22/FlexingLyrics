@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import shvyn22.flexinglyrics.FlexingLyrics.Companion.BASE_COVER_URL
 import shvyn22.flexinglyrics.FlexingLyrics.Companion.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.R
@@ -96,40 +97,42 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 }
             }
 
-            viewModel.detailsEvent.observe(viewLifecycleOwner) { event ->
-                progressBar.isVisible = event is StateEvent.Loading
+            viewModel.detailsEvent
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { event ->
+                    progressBar.isVisible = event is StateEvent.Loading
 
-                when (event) {
-                    is StateEvent.NavigateToDetails -> {
-                        findNavController()
-                            .navigate(
-                                DetailsFragmentDirections
-                                    .actionDetailsFragmentSelf(event.track)
-                            )
-                    }
-                    is StateEvent.NavigateToMedia -> {
-                        event.url.let {
-                            if (it.isEmpty()) {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.text_no_link),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            } else {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-                                startActivity(intent)
+                    when (event) {
+                        is StateEvent.NavigateToDetails -> {
+                            findNavController()
+                                .navigate(
+                                    DetailsFragmentDirections
+                                        .actionDetailsFragmentSelf(event.track)
+                                )
+                        }
+                        is StateEvent.NavigateToMedia -> {
+                            event.url.let {
+                                if (it.isEmpty()) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.text_no_link),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                                    startActivity(intent)
+                                }
                             }
                         }
+                        is StateEvent.Error ->
+                            Toast.makeText(
+                                requireActivity(),
+                                ERROR_FETCHING_DATA,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        else -> Unit
                     }
-                    is StateEvent.Error ->
-                        Toast.makeText(
-                            requireActivity(),
-                            ERROR_FETCHING_DATA,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    else -> Unit
                 }
-            }
         }
     }
 }

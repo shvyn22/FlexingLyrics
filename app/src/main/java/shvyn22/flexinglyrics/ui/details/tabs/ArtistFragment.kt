@@ -34,7 +34,7 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
         val binding = FragmentArtistBinding.bind(view)
 
         binding.apply {
-            viewModel.artistInfo.observe(viewLifecycleOwner) {
+            viewModel.getArtistInfo().observe(viewLifecycleOwner) {
                 progressBar.isVisible = it is Resource.Loading
 
                 if (it is Resource.Success) {

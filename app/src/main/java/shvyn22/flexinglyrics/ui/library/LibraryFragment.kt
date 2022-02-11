@@ -14,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentLibraryBinding
 import shvyn22.flexinglyrics.util.MultiViewModelFactory
@@ -65,22 +66,24 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
                 }).attachToRecyclerView(this)
             }
 
-            viewModel.libraryEvent.observe(viewLifecycleOwner) { event ->
-                progressBar.isVisible = event is StateEvent.Loading
+            viewModel.libraryEvent
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { event ->
+                    progressBar.isVisible = event is StateEvent.Loading
 
-                if (event is StateEvent.NavigateToDetails) {
-                    findNavController().navigate(
-                        LibraryFragmentDirections
-                            .actionLibraryFragmentToDetailsFragment(event.track)
-                    )
-                } else if (event is StateEvent.Error) {
-                    Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.text_no_internet),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (event is StateEvent.NavigateToDetails) {
+                        findNavController().navigate(
+                            LibraryFragmentDirections
+                                .actionLibraryFragmentToDetailsFragment(event.track)
+                        )
+                    } else if (event is StateEvent.Error) {
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.text_no_internet),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
         }
 
         viewModel.items.observe(viewLifecycleOwner) {

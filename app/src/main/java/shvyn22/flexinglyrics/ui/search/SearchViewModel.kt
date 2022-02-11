@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import shvyn22.flexinglyrics.data.remote.Track
@@ -27,7 +28,7 @@ class SearchViewModel @Inject constructor(
     }
 
     private val searchEventChannel = PublishSubject.create<StateEvent>()
-    val searchEvent = searchEventChannel.toLiveData()
+    val searchEvent: Observable<StateEvent> = searchEventChannel.flatMap { Observable.just(it) }
 
     private fun onErrorOccurred() {
         searchEventChannel.onNext(StateEvent.Error)

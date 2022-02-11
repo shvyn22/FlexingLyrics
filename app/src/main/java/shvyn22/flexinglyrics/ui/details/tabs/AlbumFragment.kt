@@ -41,7 +41,7 @@ class AlbumFragment : Fragment(R.layout.fragment_album) {
                 setHasFixedSize(true)
             }
 
-            viewModel.albumInfo.observe(viewLifecycleOwner) {
+            viewModel.getAlbumInfo().observe(viewLifecycleOwner) {
                 progressBar.isVisible = it is Resource.Loading
 
                 if (it is Resource.Success) {
