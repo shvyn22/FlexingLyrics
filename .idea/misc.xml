@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_album.xml" value="0.25416666666666665" />
         <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_artist.xml" value="0.13177083333333334" />
         <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_details.xml" value="0.13177083333333334" />
-        <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_search.xml" value="0.34800550206327374" />
+        <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_history.xml" value="0.21574074074074073" />
+        <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_library.xml" value="0.21574074074074073" />
+        <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_lyrics.xml" value="0.25416666666666665" />
+        <entry key="..\:/Ya/codim/android/androidapps/MVVM samples/FlexingLyrics/app/src/main/res/layout/fragment_search.xml" value="0.2" />
       </map>
     </option>
   </component>

@@ -33,10 +33,12 @@ class AlbumFragment : Fragment(R.layout.fragment_album) {
 
             viewModel.albumInfo.observe(viewLifecycleOwner) {
                 progressBar.isVisible = it is Resource.Loading
+                tvTracks.isVisible = it is Resource.Success
 
                 if (it is Resource.Success) {
                     it.data.let { albumInfo ->
                         albumAdapter.submitList(albumInfo.tracks)
+                        rvAlbum.scheduleLayoutAnimation()
 
                         Glide.with(view)
                             .load(albumInfo.cover)

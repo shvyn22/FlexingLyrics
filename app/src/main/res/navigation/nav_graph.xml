@@ -11,7 +11,11 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/destination_enter"
+            app:exitAnim="@anim/destination_exit"
+            app:popEnterAnim="@anim/destination_pop_enter"
+            app:popExitAnim="@anim/destination_pop_exit" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -20,7 +24,11 @@
         tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_historyFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/destination_enter"
+            app:exitAnim="@anim/destination_exit"
+            app:popEnterAnim="@anim/destination_pop_enter"
+            app:popExitAnim="@anim/destination_pop_exit" />
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
@@ -29,7 +37,11 @@
         tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_libraryFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/destination_enter"
+            app:exitAnim="@anim/destination_exit"
+            app:popEnterAnim="@anim/destination_pop_enter"
+            app:popExitAnim="@anim/destination_pop_exit" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
@@ -38,7 +50,11 @@
         tools:layout="@layout/fragment_details">
         <action
             android:id="@+id/action_detailsFragment_self"
-            app:destination="@id/detailsFragment" />
+            app:destination="@id/detailsFragment"
+            app:enterAnim="@anim/destination_enter"
+            app:exitAnim="@anim/destination_exit"
+            app:popEnterAnim="@anim/destination_pop_enter"
+            app:popExitAnim="@anim/destination_pop_exit" />
         <argument
             android:name="track"
             app:argType="shvyn22.flexinglyrics.data.remote.Track" />

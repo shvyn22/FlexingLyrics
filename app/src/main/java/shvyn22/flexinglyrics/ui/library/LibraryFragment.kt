@@ -56,6 +56,11 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
                 }).attachToRecyclerView(this)
             }
 
+            viewModel.items.observe(viewLifecycleOwner) {
+                libraryAdapter.submitList(it)
+                rvLibrary.scheduleLayoutAnimation()
+            }
+
             viewModel.libraryEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
                 progressBar.isVisible = event is StateEvent.Loading
 
@@ -72,10 +77,6 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
                     ).show()
                 }
             }
-        }
-
-        viewModel.items.observe(viewLifecycleOwner) {
-            libraryAdapter.submitList(it)
         }
 
         setHasOptionsMenu(true)

@@ -75,7 +75,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             viewModel.tracks.observe(viewLifecycleOwner) {
                 progressBar.isVisible = it is Resource.Loading
 
-                if (it is Resource.Success) searchAdapter.submitList(it.data)
+                if (it is Resource.Success) {
+                    searchAdapter.submitList(it.data)
+                    rvSearch.scheduleLayoutAnimation()
+                }
                 else if (it is Resource.Error) {
                     Toast.makeText(requireContext(), it.msg, Toast.LENGTH_LONG).show()
                 }

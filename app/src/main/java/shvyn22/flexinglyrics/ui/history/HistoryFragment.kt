@@ -52,6 +52,11 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                 }).attachToRecyclerView(this)
             }
 
+            viewModel.items.observe(viewLifecycleOwner) {
+                historyAdapter.submitList(it)
+                rvHistory.scheduleLayoutAnimation()
+            }
+
             viewModel.historyEvent.collectOnLifecycle(viewLifecycleOwner) { event ->
                 progressBar.isVisible = event is StateEvent.Loading
 
@@ -68,10 +73,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
                     ).show()
                 }
             }
-        }
-
-        viewModel.items.observe(viewLifecycleOwner) {
-            historyAdapter.submitList(it)
         }
 
         setHasOptionsMenu(true)
