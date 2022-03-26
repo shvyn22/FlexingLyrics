@@ -10,6 +10,10 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
   <img src="assets/screen3.png" width=250/>
 </p>
 
+## Screen record
+[Screen record](https://user-images.githubusercontent.com/43935139/160253647-8c365434-017a-40cc-9fd0-a8b3f084e5bd.mp4)
+
+
 ## Tech stack and concepts
 * **[Kotlin](https://kotlinlang.org/)** as programming language.
 * **[Kotlin coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/)** as framework for asynchronous jobs.
@@ -49,7 +53,7 @@ The application is divided into 3 layers:
 For dependency flow there is .di package with corresponding modules. 
 
 ## Project structure
-<img src="screenshots/project_structure.png" width=750/>
+<img src="assets/project_structure.png" width=750/>
 
 ## How to build?
 In order to build the application you need to provide an API key:
