@@ -14,6 +14,7 @@ import shvyn22.flexinglyrics.repository.local.HistoryRepository
 import shvyn22.flexinglyrics.repository.local.LibraryRepository
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
+import shvyn22.flexinglyrics.util.StateError
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromTrackInfoToTrack
 import javax.inject.Inject
@@ -82,14 +83,14 @@ class DetailsViewModel @Inject constructor(
                     is Resource.Success -> detailsEventChannel
                         .send(StateEvent.NavigateToDetails(it.data.copy(hasLyrics = true)))
                     is Resource.Loading -> detailsEventChannel.send(StateEvent.Loading)
-                    is Resource.Error -> onErrorOccurred()
+                    is Resource.Error -> onErrorOccurred(StateError.ERROR_FETCHING_DATA)
                     else -> Unit
                 }
             }
         }
     }
 
-    fun onErrorOccurred() = viewModelScope.launch {
-        detailsEventChannel.send(StateEvent.Error)
+    fun onErrorOccurred(error: StateError) = viewModelScope.launch {
+        detailsEventChannel.send(StateEvent.Error(error))
     }
 }

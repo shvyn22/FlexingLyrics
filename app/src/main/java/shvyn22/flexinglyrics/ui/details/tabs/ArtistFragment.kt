@@ -11,6 +11,7 @@ import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentArtistBinding
 import shvyn22.flexinglyrics.ui.details.DetailsViewModel
 import shvyn22.flexinglyrics.util.Resource
+import shvyn22.flexinglyrics.util.StateError
 import shvyn22.flexinglyrics.util.defaultRequests
 
 @AndroidEntryPoint
@@ -60,7 +61,8 @@ class ArtistFragment : Fragment(R.layout.fragment_artist) {
                             viewModel.onMediaIconClick(artistInfo.website)
                         }
                     }
-                } else if (it is Resource.Error) viewModel.onErrorOccurred()
+                } else if (it is Resource.Error)
+                    viewModel.onErrorOccurred(StateError.ERROR_FETCHING_DATA)
             }
         }
     }

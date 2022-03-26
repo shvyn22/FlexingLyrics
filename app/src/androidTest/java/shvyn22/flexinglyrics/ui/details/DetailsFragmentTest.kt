@@ -129,7 +129,7 @@ class DetailsFragmentTest {
             .check(matches(withText(track1.album)))
 
         onView(withId(R.id.tv_lyrics))
-            .check(matches(withText(R.string.text_no_lyrics)))
+            .check(matches(withText(R.string.text_error_lyrics)))
     }
 
     @Test

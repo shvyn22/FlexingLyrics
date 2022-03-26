@@ -1,8 +1,8 @@
 package shvyn22.flexinglyrics.repository.remote
 
 import kotlinx.coroutines.flow.flow
-import shvyn22.flexinglyrics.FlexingLyrics.Companion.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.api.ApiInterface
+import shvyn22.flexinglyrics.util.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.util.Resource
 
 class RemoteRepositoryImpl(

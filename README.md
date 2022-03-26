@@ -5,9 +5,9 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
 
 ## Screenshots
 <p float="left">
-  <img src="screenshots/screen1.png" width=250/>
-  <img src="screenshots/screen2.png" width=250/> 
-  <img src="screenshots/screen3.png" width=250/>
+  <img src="assets/screen1.png" width=250/>
+  <img src="assets/screen2.png" width=250/> 
+  <img src="assets/screen3.png" width=250/>
 </p>
 
 ## Tech stack and concepts
@@ -29,6 +29,7 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
   * **ViewModel** for implementing MVVM pattern.
   * **Livedata** as lifecycle-aware observable for UI layer.\
   NOTE: considering switch to **Flow** (*StateFlow*, *SharedFlow*).
+* **[WorkManager](https://developer.android.com/reference/androidx/work/WorkManager)** for background work.
 * **[Glide](https://github.com/bumptech/glide)** for working with images.
 * Testing.
   * **JUnit**.
@@ -63,7 +64,7 @@ API_KEY = "YOUR_API_KEY"
 ```
 MIT License
 
-Copyright (c) 2021 Shvyndia Andrii
+Copyright (c) 2022 Shvyndia Andrii
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

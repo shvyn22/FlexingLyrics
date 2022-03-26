@@ -10,6 +10,7 @@ import shvyn22.flexinglyrics.data.local.model.LibraryItem
 import shvyn22.flexinglyrics.repository.local.LibraryRepository
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
+import shvyn22.flexinglyrics.util.StateError
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromLibraryItemToTrack
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class LibraryViewModel @Inject constructor(
     val libraryEvent = libraryEventChannel.receiveAsFlow()
 
     private fun onErrorOccurred() = viewModelScope.launch {
-        libraryEventChannel.send(StateEvent.Error)
+        libraryEventChannel.send(StateEvent.Error(StateError.ERROR_FETCHING_DATA))
     }
 
     fun searchTracks(query: String) {

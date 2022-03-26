@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import shvyn22.flexinglyrics.api.ApiInterface
+import shvyn22.flexinglyrics.util.BASE_URL
 import javax.inject.Singleton
 
 @Module
@@ -16,7 +17,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit = Retrofit.Builder()
-        .baseUrl(ApiInterface.BASE_URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

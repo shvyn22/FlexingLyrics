@@ -94,7 +94,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 } else if (event is StateEvent.Error) {
                     Toast.makeText(
                         requireActivity(),
-                        getString(R.string.text_no_internet),
+                        getString(R.string.text_error_fetching),
                         Toast.LENGTH_LONG
                     ).show()
                 }

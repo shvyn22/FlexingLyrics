@@ -13,14 +13,10 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import shvyn22.flexinglyrics.FlexingLyrics.Companion.BASE_COVER_URL
-import shvyn22.flexinglyrics.FlexingLyrics.Companion.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentDetailsBinding
 import shvyn22.flexinglyrics.ui.details.adapter.PagerAdapter
-import shvyn22.flexinglyrics.util.StateEvent
-import shvyn22.flexinglyrics.util.collectOnLifecycle
-import shvyn22.flexinglyrics.util.defaultRequests
+import shvyn22.flexinglyrics.util.*
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details) {
@@ -103,7 +99,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                             if (it.isEmpty()) {
                                 Toast.makeText(
                                     requireContext(),
-                                    getString(R.string.text_no_link),
+                                    getString(R.string.text_error_link),
                                     Toast.LENGTH_LONG
                                 ).show()
                             } else {
@@ -115,7 +111,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                     is StateEvent.Error ->
                         Toast.makeText(
                             requireActivity(),
-                            ERROR_FETCHING_DATA,
+                            when (event.error) {
+                                StateError.ERROR_FETCHING_DATA ->
+                                    getString(R.string.text_error_fetching)
+                                StateError.ERROR_LOADING_IMAGE ->
+                                    getString(R.string.text_error_loading)
+                                StateError.ERROR_PERMISSION_NOT_GRANTED ->
+                                    getString(R.string.text_error_permission)
+                            },
                             Toast.LENGTH_LONG
                         ).show()
                     else -> Unit

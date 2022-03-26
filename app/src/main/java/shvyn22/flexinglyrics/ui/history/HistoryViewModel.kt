@@ -12,6 +12,7 @@ import shvyn22.flexinglyrics.data.local.model.HistoryItem
 import shvyn22.flexinglyrics.repository.local.HistoryRepository
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
+import shvyn22.flexinglyrics.util.StateError
 import shvyn22.flexinglyrics.util.StateEvent
 import shvyn22.flexinglyrics.util.fromHistoryItemToTrack
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class HistoryViewModel @Inject constructor(
     val historyEvent = historyEventChannel.receiveAsFlow()
 
     private fun onErrorOccurred() = viewModelScope.launch {
-        historyEventChannel.send(StateEvent.Error)
+        historyEventChannel.send(StateEvent.Error(StateError.ERROR_FETCHING_DATA))
     }
 
     fun onTrackSelected(item: HistoryItem) = viewModelScope.launch {

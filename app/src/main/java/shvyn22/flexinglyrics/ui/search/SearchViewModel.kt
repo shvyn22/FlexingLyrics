@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import shvyn22.flexinglyrics.data.remote.Track
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
 import shvyn22.flexinglyrics.util.Resource
+import shvyn22.flexinglyrics.util.StateError
 import shvyn22.flexinglyrics.util.StateEvent
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ class SearchViewModel @Inject constructor(
     val searchEvent = searchEventChannel.receiveAsFlow()
 
     private fun onErrorOccurred() = viewModelScope.launch {
-        searchEventChannel.send(StateEvent.Error)
+        searchEventChannel.send(StateEvent.Error(StateError.ERROR_FETCHING_DATA))
     }
 
     fun searchTracks(query: String?) = viewModelScope.launch {

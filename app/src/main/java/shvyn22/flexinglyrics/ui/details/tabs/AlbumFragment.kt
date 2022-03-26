@@ -12,6 +12,7 @@ import shvyn22.flexinglyrics.databinding.FragmentAlbumBinding
 import shvyn22.flexinglyrics.ui.details.DetailsViewModel
 import shvyn22.flexinglyrics.ui.details.adapter.AlbumAdapter
 import shvyn22.flexinglyrics.util.Resource
+import shvyn22.flexinglyrics.util.StateError
 import shvyn22.flexinglyrics.util.defaultRequests
 
 @AndroidEntryPoint
@@ -47,7 +48,8 @@ class AlbumFragment : Fragment(R.layout.fragment_album) {
 
                         tvAlbum.text = albumInfo.album
                     }
-                } else if (it is Resource.Error) viewModel.onErrorOccurred()
+                } else if (it is Resource.Error)
+                    viewModel.onErrorOccurred(StateError.ERROR_FETCHING_DATA)
             }
         }
     }

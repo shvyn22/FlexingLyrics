@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import shvyn22.flexinglyrics.FlexingLyrics.Companion.BASE_COVER_URL
 import shvyn22.flexinglyrics.data.local.model.HistoryItem
 import shvyn22.flexinglyrics.databinding.ItemTrackBinding
+import shvyn22.flexinglyrics.util.BASE_COVER_URL
 import shvyn22.flexinglyrics.util.defaultRequests
 
 class HistoryAdapter(

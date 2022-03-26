@@ -72,7 +72,7 @@ class LibraryFragment : Fragment(R.layout.fragment_library) {
                 } else if (event is StateEvent.Error) {
                     Toast.makeText(
                         requireActivity(),
-                        getString(R.string.text_no_internet),
+                        getString(R.string.text_error_fetching),
                         Toast.LENGTH_LONG
                     ).show()
                 }
