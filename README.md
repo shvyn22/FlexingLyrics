@@ -53,7 +53,7 @@ The application is divided into 3 layers:
 For dependency flow there is .di package with corresponding modules. 
 
 ## Project structure
-<img src="assets/project_structure.png" width=750/>
+<img src="assets/project_structure.jpg" width=750/>
 
 ## How to build?
 In order to build the application you need to provide an API key:
