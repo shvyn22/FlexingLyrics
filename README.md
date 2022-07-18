@@ -1,7 +1,6 @@
 # FlexingLyrics
 FlexingLyrics is an Android MVVM sample application created for learning purposes only.\
-This application is based on [Happi.dev](https://happi.dev/) API and provides users with ability to search information about their favorite tracks: lyrics, artist information, album information.
-
+This application is based on [Happi.dev](https://happi.dev/) API and provides users with the ability to search information about tracks: lyrics, artist information, album information.
 
 ## Screenshots
 <p float="left">
@@ -13,26 +12,22 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
 ## Screen record
 [Screen record](https://user-images.githubusercontent.com/43935139/160253647-8c365434-017a-40cc-9fd0-a8b3f084e5bd.mp4)
 
-
 ## Tech stack and concepts
 * **[Kotlin](https://kotlinlang.org/)** as programming language.
-* **[Kotlin coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/)** as framework for asynchronous jobs.
-  * **[RxJava](https://github.com/ReactiveX/RxJava)** as its alternative (/Dagger2+RxJava branch).
+* **[Kotlin coroutines](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/)** as framework for asynchronous jobs (**[RxJava](https://github.com/ReactiveX/RxJava)** as its alternative (/Dagger2+RxJava branch)).
 * Single activity support.
   * **[Fragments](https://developer.android.com/jetpack/androidx/releases/fragment)**.
   * **[Navigation components](https://developer.android.com/jetpack/androidx/releases/navigation)**.
-* Modern UI toolkit
-  * **[Material components](https://material.io/develop/android)**
-  * **ViewBinding** for binding .xml views to objects in Activities and Fragments
+* Modern UI toolkit.
+  * **[Material components](https://material.io/develop/android)**.
+  * **ViewBinding** for binding .xml views to objects in Activities and Fragments.
 * API-based remote data layer.
   * **[Retrofit](https://square.github.io/retrofit/)** for network queries.
-  * **[GSON](https://github.com/google/gson)** for parsing JSON.\
-  NOTE: considering switch to **Moshi**.
+  * **[GSON](https://github.com/google/gson)** for parsing JSON.
 * **[Room](https://developer.android.com/jetpack/androidx/releases/room)** for local data layer.
 * **[Lifecycle components](https://developer.android.com/jetpack/androidx/releases/lifecycle)**.
   * **ViewModel** for implementing MVVM pattern.
-  * **Livedata** as lifecycle-aware observable for UI layer.\
-  NOTE: considering switch to **Flow** (*StateFlow*, *SharedFlow*).
+  * **Livedata** as lifecycle-aware observable for UI layer.
 * **[WorkManager](https://developer.android.com/reference/androidx/work/WorkManager)** for background work.
 * **[Glide](https://github.com/bumptech/glide)** for working with images.
 * Testing.
@@ -41,19 +36,17 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
   * **Espresso** for UI-testing.
   * **Mockito** for mocking third-party classes (e.g. *NavController*).
   * Specific testing artifacts for other libraries.
-* **[Hilt](https://dagger.dev/hilt/)** for dependency injection.
-  * **[Dagger 2](https://dagger.dev/)** as its alternative (/Dagger2+RxJava branch).
+* **[Hilt](https://dagger.dev/hilt/)** for dependency injection (**[Dagger 2](https://dagger.dev/)** as its alternative (/Dagger2+RxJava branch)).
 
-## Architecture
-The application is divided into 3 layers:
-1. **UI** (.ui): MainActivity, Fragments and ViewModels associated with them.
-2. **Domain** (.repository): Repositories (abstractions and implementations).
-3. **Data** (.data, .api): API service, DTOs for remote data; Database, DAOs, Models for local data.
-
-For dependency flow there is .di package with corresponding modules. 
-
-## Project structure
-<img src="assets/project_structure.jpg" width=750/>
+## Key features
+#### i.e. what is unique among other samples?
+* Query-based search requests (API and local storage).
+* **Livedata** usage.
+* **DrawerLayout** implementation.
+* **ViewPager** with **TabLayout** implementation for sub-fragments.
+  * **Shared ViewModel** usage for the communication between such fragments.
+* **WorkManager** implementation for long-term background work (saving an image of lyrics).
+  * Utility functions for creating bitmap from some text and downloading it to the device storage.
 
 ## How to build?
 In order to build the application you need to provide an API key:
