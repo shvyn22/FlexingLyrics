@@ -1,10 +1,10 @@
 package shvyn22.flexinglyrics.repository
 
 import kotlinx.coroutines.flow.flow
-import shvyn22.flexinglyrics.FlexingLyrics
 import shvyn22.flexinglyrics.api.ApiInterface
 import shvyn22.flexinglyrics.api.FakeApiImpl
 import shvyn22.flexinglyrics.repository.remote.RemoteRepository
+import shvyn22.flexinglyrics.util.ERROR_FETCHING_DATA
 import shvyn22.flexinglyrics.util.Resource
 
 class FakeRemoteRepositoryImpl(
@@ -18,9 +18,9 @@ class FakeRemoteRepositoryImpl(
             try {
                 val response = api.searchTracks(query)
                 if (response.success) emit(Resource.Success(response.result))
-                else emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+                else emit(Resource.Error(ERROR_FETCHING_DATA))
             } catch (e: Exception) {
-                emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+                emit(Resource.Error(ERROR_FETCHING_DATA))
             }
         }
     }
@@ -30,9 +30,9 @@ class FakeRemoteRepositoryImpl(
         try {
             val response = api.getArtistInfo(artistId)
             if (response.success) emit(Resource.Success(response.result))
-            else emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+            else emit(Resource.Error(ERROR_FETCHING_DATA))
         } catch (e: Exception) {
-            emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+            emit(Resource.Error(ERROR_FETCHING_DATA))
         }
     }
 
@@ -41,9 +41,9 @@ class FakeRemoteRepositoryImpl(
         try {
             val response = api.getAlbumInfo(artistId, albumId)
             if (response.success) emit(Resource.Success(response.result))
-            else emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+            else emit(Resource.Error(ERROR_FETCHING_DATA))
         } catch (e: Exception) {
-            emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+            emit(Resource.Error(ERROR_FETCHING_DATA))
         }
     }
 
@@ -52,9 +52,9 @@ class FakeRemoteRepositoryImpl(
         try {
             val response = api.getTrackInfo(artistId, albumId, trackId)
             if (response.success) emit(Resource.Success(response.result))
-            else emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+            else emit(Resource.Error(ERROR_FETCHING_DATA))
         } catch (e: Exception) {
-            emit(Resource.Error(FlexingLyrics.ERROR_FETCHING_DATA))
+            emit(Resource.Error(ERROR_FETCHING_DATA))
         }
     }
 }

@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
-import com.google.gson.Gson
 import shvyn22.flexinglyrics.R
 import java.io.File
 import java.io.FileOutputStream
@@ -101,16 +100,4 @@ fun downloadBitmap(
         contentValues.put(MediaStore.Images.Media.DATA, file.absolutePath)
         context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
-}
-
-fun serializeBitmap(
-    bitmap: Bitmap
-): String {
-    return Gson().toJson(bitmap)
-}
-
-fun deserializeBitmap(
-    jsonString: String
-): Bitmap {
-    return Gson().fromJson(jsonString, Bitmap::class.java)
 }

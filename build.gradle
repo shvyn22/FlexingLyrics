@@ -43,9 +43,6 @@ buildscript {
         // Retrofit
         retrofitVersion = "2.8.1"
 
-        // WorkManager
-        workManagerVersion = "2.7.1"
-
         // Glide
         glideVersion = "4.12.0"
 

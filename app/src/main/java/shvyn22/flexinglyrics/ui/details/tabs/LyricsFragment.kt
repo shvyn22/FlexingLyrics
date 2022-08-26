@@ -1,23 +1,21 @@
 package shvyn22.flexinglyrics.ui.details.tabs
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.work.*
 import dagger.hilt.android.AndroidEntryPoint
 import shvyn22.flexinglyrics.R
 import shvyn22.flexinglyrics.databinding.FragmentLyricsBinding
+import shvyn22.flexinglyrics.service.BitmapDownloadService
 import shvyn22.flexinglyrics.ui.details.DetailsViewModel
 import shvyn22.flexinglyrics.util.StateError
-import shvyn22.flexinglyrics.util.WORKER_TEXT_KEY
-import shvyn22.flexinglyrics.util.WORKER_TITLE_KEY
-import shvyn22.flexinglyrics.work.BitmapWorker
-import shvyn22.flexinglyrics.work.DownloadWorker
+import shvyn22.flexinglyrics.util.WORK_TEXT_KEY
+import shvyn22.flexinglyrics.util.WORK_TITLE_KEY
 
 @AndroidEntryPoint
 class LyricsFragment : Fragment(R.layout.fragment_lyrics) {
@@ -53,35 +51,10 @@ class LyricsFragment : Fragment(R.layout.fragment_lyrics) {
         title: String,
         text: String?
     ) {
-        val workManager = WorkManager
-            .getInstance(requireContext())
-            .beginWith(
-                OneTimeWorkRequestBuilder<BitmapWorker>()
-                    .setInputData(workDataOf(WORKER_TEXT_KEY to text))
-                    .build()
-            )
-            .then(
-                OneTimeWorkRequestBuilder<DownloadWorker>()
-                    .setInputData(workDataOf(WORKER_TITLE_KEY to title))
-                    .build()
-            )
-        workManager.enqueue()
-        workManager.workInfosLiveData.observe(viewLifecycleOwner) { infos ->
-            infos.forEachIndexed { index, info ->
-                if (info.state.isFinished) {
-                    if (info.state == WorkInfo.State.FAILED) {
-                        viewModel.onErrorOccurred(StateError.ERROR_LOADING_IMAGE)
-                    } else if (info.state == WorkInfo.State.SUCCEEDED && index == 1) {
-                        Toast
-                            .makeText(
-                                requireContext(),
-                                getString(R.string.text_success_loading),
-                                Toast.LENGTH_LONG
-                            )
-                            .show()
-                    }
-                }
-            }
+        Intent(activity, BitmapDownloadService::class.java).also {
+            it.putExtra(WORK_TITLE_KEY, title)
+            it.putExtra(WORK_TEXT_KEY, text)
+            activity?.startService(it)
         }
     }
 }

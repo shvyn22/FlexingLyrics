@@ -10,6 +10,7 @@ const val API_LIMIT = 50
 const val API_TYPE = "track"
 const val API_KEY = BuildConfig.API_KEY
 
-const val WORKER_TITLE_KEY = "title"
-const val WORKER_TEXT_KEY = "text"
-const val WORKER_BITMAP_KEY = "bitmap"
+const val WORK_TITLE_KEY = "title"
+const val WORK_TEXT_KEY = "text"
+
+const val SERVICE_SCOPE_NAME = "serviceScope"
