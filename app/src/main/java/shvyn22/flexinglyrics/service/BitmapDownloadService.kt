@@ -41,6 +41,8 @@ class BitmapDownloadService : Service() {
                         .show()
                 }
             }
+
+            stopSelf()
         }
         return START_STICKY
     }
