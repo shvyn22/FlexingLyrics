@@ -45,7 +45,7 @@ This application is based on [Happi.dev](https://happi.dev/) API and provides us
 * **DrawerLayout** implementation.
 * **ViewPager** with **TabLayout** implementation for sub-fragments.
   * **Shared ViewModel** usage for the communication between such fragments.
-* **WorkManager** implementation for long-term background work (saving an image of lyrics).
+* **WorkManager** (**Service** in /service branch) implementation for long-term background work (saving an image of lyrics).
   * Utility functions for creating bitmap from some text and downloading it to the device storage.
 
 ## How to build?
